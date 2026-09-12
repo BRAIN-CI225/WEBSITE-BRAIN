@@ -124,9 +124,18 @@ ASSET/
   │   ├── films.jpg                (version web optimisée, source films.png)
   │   ├── live.jpg                 (version web optimisée, source live.png)
   │   └── digitalisation.jpg       (version web optimisée, source digitalisation.png)
+  ├── REALISATIONS/                (photos extraites et nommées depuis le pressbook)
+  │   ├── ilofio-brochures.jpg
+  │   ├── dampo-campagne-produits.jpg
+  │   ├── formation-graphisme-brain.jpg
+  │   ├── brochure-institutionnelle.jpg
+  │   ├── ibk-campagne-vehicule.jpg
+  │   ├── roc-energy-campagne.jpg
+  │   ├── tiken-jah-affichage.jpg
+  │   ├── kit-accouchement-campagne.jpg
+  │   └── telecel-campagne.jpg
   ├── service-web.jpg
   ├── service-social.jpg
-  ├── service-design.jpg
   ├── service-films.jpg
   ├── service-live.jpg
   ├── service-digital.jpg
