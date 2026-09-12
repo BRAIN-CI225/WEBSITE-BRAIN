@@ -118,7 +118,7 @@ ASSET/
   ├── clients/                     (logos clients extraits et uniformisés)
   ├── SERVICES/                    (visuels identifiés par contenu pour les 7 services)
   │   ├── branding.jpg             (version web optimisée, source branding.png)
-  │   ├── web.jpg                  (version web optimisée, source web.png)
+  │   ├── developpement-web-mobile.jpg (version web optimisée, source developpement-web-mobile.png)
   │   ├── social.jpg               (version web optimisée, source social.png)
   │   ├── design.jpg
   │   ├── films.jpg                (version web optimisée, source films.png)
