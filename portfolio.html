@@ -84,6 +84,26 @@
         <img src="ASSET/REALISATIONS/roc-energy-campagne.jpg" alt="Visuel publicitaire ROC Energy Drink">
         <div class="pf-overlay"><span class="pf-cat">Design · Audiovisuel</span><h4>Campagne ROC Energy</h4><p>Création de visuels publicitaires pour affichage.</p><a href="service-films.html" class="pf-btn">Voir le projet</a></div>
       </div>
+      <article class="portfolio-item video-project" data-cat="audiovisuel" data-aos="zoom-in" data-aos-delay="200">
+        <img src="ASSET/SERVICES/films.jpg" alt="Film audiovisuel BRAIN, vidéo YouTube" loading="lazy">
+        <span class="video-project-icon" aria-hidden="true"><i class="fa-solid fa-play"></i></span>
+        <div class="pf-overlay">
+          <span class="pf-cat">Audiovisuel · YouTube</span>
+          <h4>Production audiovisuelle</h4>
+          <p>Film de présentation à regarder en ligne.</p>
+          <button class="pf-btn video-trigger" type="button" data-video-url="https://www.youtube.com/watch?v=w0JiSuqoSQc" data-video-title="Production audiovisuelle BRAIN">Lire la vidéo <i class="fa-solid fa-play"></i></button>
+        </div>
+      </article>
+      <article class="portfolio-item video-project" data-cat="audiovisuel" data-aos="zoom-in" data-aos-delay="240">
+        <img src="ASSET/SERVICES/live.jpg" alt="Captation vidéo BRAIN, vidéo YouTube" loading="lazy">
+        <span class="video-project-icon" aria-hidden="true"><i class="fa-solid fa-play"></i></span>
+        <div class="pf-overlay">
+          <span class="pf-cat">Audiovisuel · YouTube</span>
+          <h4>Captation et live</h4>
+          <p>Référence vidéo disponible sur YouTube.</p>
+          <button class="pf-btn video-trigger" type="button" data-video-url="https://www.youtube.com/watch?v=AdJfB29UtbU" data-video-title="Captation et live BRAIN">Lire la vidéo <i class="fa-solid fa-play"></i></button>
+        </div>
+      </article>
       <div class="portfolio-item" data-cat="evenementiel audiovisuel" data-aos="zoom-in">
         <img src="ASSET/REALISATIONS/tiken-jah-affichage.jpg" alt="Affichage événementiel pour Tiken Jah Fakoly">
         <div class="pf-overlay"><span class="pf-cat">Événementiel</span><h4>Affichage Tiken Jah</h4><p>Création de support grand format pour événement culturel.</p><a href="service-live.html" class="pf-btn">Voir le projet</a></div>
@@ -95,6 +115,16 @@
       <div class="portfolio-item" data-cat="evenementiel" data-aos="zoom-in" data-aos-delay="160">
         <img src="ASSET/REALISATIONS/telecel-campagne.jpg" alt="Campagne Telecel avec véhicules habillés">
         <div class="pf-overlay"><span class="pf-cat">Branding · Événementiel</span><h4>Campagne Telecel</h4><p>Habillage de véhicules et communication de marque.</p><a href="service-branding.html" class="pf-btn">Voir le projet</a></div>
+      </div>
+    </div>
+    <div class="video-modal" id="video-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="video-modal-title">
+      <div class="video-modal-backdrop" data-video-close></div>
+      <div class="video-modal-panel">
+        <div class="video-modal-header">
+          <h2 id="video-modal-title">Lecture vidéo</h2>
+          <button class="video-modal-close" type="button" aria-label="Fermer le lecteur vidéo" data-video-close><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="video-frame" id="video-frame"></div>
       </div>
     </div>
   </div>

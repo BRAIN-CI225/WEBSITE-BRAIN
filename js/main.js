@@ -116,6 +116,58 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  /* ---------- VIDEO PLAYER ---------- */
+  const videoModal = document.getElementById('video-modal');
+  const videoFrame = document.getElementById('video-frame');
+  const videoTitle = document.getElementById('video-modal-title');
+  const videoTriggers = document.querySelectorAll('.video-trigger');
+  const videoCloseButtons = document.querySelectorAll('[data-video-close]');
+  let lastVideoTrigger = null;
+
+  function youtubeEmbedUrl(url){
+    try{
+      const parsed = new URL(url);
+      let videoId = parsed.searchParams.get('v');
+      if(!videoId && parsed.hostname === 'youtu.be'){ videoId = parsed.pathname.slice(1); }
+      return videoId ? 'https://www.youtube.com/embed/' + encodeURIComponent(videoId) + '?rel=0' : null;
+    }catch(error){ return null; }
+  }
+
+  function openVideo(url, title, trigger){
+    if(!videoModal || !videoFrame) return;
+    const embedUrl = youtubeEmbedUrl(url);
+    videoTitle.textContent = title || 'Lecture vidéo';
+    lastVideoTrigger = trigger || null;
+    if(embedUrl){
+      videoFrame.innerHTML = '<iframe src="' + embedUrl + '" title="' + (title || 'Vidéo') + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
+    }else if(/\.mp4(?:$|\?)/i.test(url)){
+      videoFrame.innerHTML = '<video controls playsinline preload="metadata"><source src="' + url + '" type="video/mp4">Votre navigateur ne peut pas lire cette vidéo.</video>';
+    }else{
+      videoFrame.innerHTML = '<iframe src="' + url + '" title="' + (title || 'Vidéo') + '" allowfullscreen></iframe>';
+    }
+    videoModal.classList.add('is-open');
+    videoModal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('video-modal-open');
+    videoCloseButtons[0]?.focus();
+  }
+
+  function closeVideo(){
+    if(!videoModal || !videoFrame) return;
+    videoFrame.innerHTML = '';
+    videoModal.classList.remove('is-open');
+    videoModal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('video-modal-open');
+    lastVideoTrigger?.focus();
+  }
+
+  videoTriggers.forEach(function(trigger){
+    trigger.addEventListener('click', function(){
+      openVideo(trigger.getAttribute('data-video-url'), trigger.getAttribute('data-video-title'), trigger);
+    });
+  });
+  videoCloseButtons.forEach(function(button){ button.addEventListener('click', closeVideo); });
+  document.addEventListener('keydown', function(event){ if(event.key === 'Escape' && videoModal?.classList.contains('is-open')) closeVideo(); });
+
   /* ---------- SERVICE DETAIL SMOOTH NAV ---------- */
   const sdnItems = document.querySelectorAll('.sdn-item');
   if(sdnItems.length){

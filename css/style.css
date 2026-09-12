@@ -573,6 +573,16 @@ h1,h2,h3,h4{font-family:var(--ff-head);font-weight:800;line-height:1.15;}
   filter:brightness(.7) saturate(1.1);
 }
 .portfolio-item:hover img{transform:scale(1.1);}
+.video-project-icon{
+  position:absolute;top:18px;right:18px;
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;background:rgba(8,12,28,.78);
+  border:1px solid rgba(255,255,255,.3);
+  pointer-events:none;
+}
+.video-trigger{font-family:inherit;color:#fff;cursor:pointer;}
+.video-trigger i{margin-left:6px;}
 .portfolio-item .pf-overlay{
   position:absolute;inset:0;
   background:linear-gradient(180deg, rgba(6,9,18,.1) 30%, rgba(6,9,18,.95) 100%);
@@ -596,6 +606,25 @@ h1,h2,h3,h4{font-family:var(--ff-head);font-weight:800;line-height:1.15;}
 }
 .portfolio-item[data-cat]{display:block;}
 .portfolio-item.hide{display:none;}
+.video-modal{
+  position:fixed;inset:0;z-index:1200;
+  display:none;align-items:center;justify-content:center;
+  padding:24px;
+}
+.video-modal.is-open{display:flex;}
+.video-modal-backdrop{position:absolute;inset:0;background:rgba(3,5,12,.86);backdrop-filter:blur(8px);}
+.video-modal-panel{
+  position:relative;z-index:1;width:min(960px,100%);
+  background:#0a1022;border:1px solid rgba(255,255,255,.14);
+  border-radius:var(--radius-md);box-shadow:0 24px 80px rgba(0,0,0,.5);overflow:hidden;
+}
+.video-modal-header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.1);}
+.video-modal-header h2{font-size:1rem;margin:0;}
+.video-modal-close{width:44px;height:44px;border:1px solid rgba(255,255,255,.18);border-radius:50%;background:rgba(255,255,255,.05);color:#fff;cursor:pointer;font-size:1rem;}
+.video-modal-close:hover,.video-modal-close:focus-visible{background:var(--c-orange);border-color:var(--c-orange);outline:none;}
+.video-frame{aspect-ratio:16/9;background:#03050b;}
+.video-frame iframe,.video-frame video{display:block;width:100%;height:100%;border:0;}
+body.video-modal-open{overflow:hidden;}
 
 /* ============ CLIENTS LOGOS ============ */
 .clients-strip{
