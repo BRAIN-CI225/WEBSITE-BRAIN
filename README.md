@@ -114,6 +114,8 @@ js/
   └── main.js           (navigation, animations, filtres portfolio, validation formulaire)
 ASSET/
   ├── brain-branding-poster.png   (affiche officielle BRAIN fournie par le client)
+  ├── NOS CLIENTS.png              (planche source des logos clients)
+  ├── clients/                     (logos clients extraits et uniformisés)
   ├── service-web.jpg
   ├── service-social.jpg
   ├── service-design.jpg

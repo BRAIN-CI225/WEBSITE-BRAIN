@@ -600,24 +600,36 @@ h1,h2,h3,h4{font-family:var(--ff-head);font-weight:800;line-height:1.15;}
 /* ============ CLIENTS LOGOS ============ */
 .clients-strip{
   display:grid;
-  grid-template-columns:repeat(6, 1fr);
-  gap:20px;
+  grid-template-columns:repeat(4, 1fr);
+  gap:16px;
   align-items:center;
 }
 .client-logo{
-  height:80px;
+  min-height:132px;
+  padding:14px;
   display:flex;align-items:center;justify-content:center;
-  background:rgba(255,255,255,.03);
+  background:#fff;
   border:1px solid rgba(255,255,255,.08);
   border-radius:var(--radius-sm);
-  color:var(--c-grey-dark);
-  font-family:var(--ff-head);font-weight:800;font-size:1.1rem;
-  letter-spacing:.02em;
-  transition:all .3s ease;
+  box-shadow:0 12px 28px rgba(0,0,0,.16);
+  transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+}
+.client-logo img{
+  display:block;
+  width:100%;
+  height:104px;
+  object-fit:contain;
+  transition:transform .3s ease;
 }
 .client-logo:hover{
-  color:var(--c-white);border-color:var(--c-orange);
-  background:rgba(255,138,0,.06);
+  border-color:var(--c-orange);
+  box-shadow:0 16px 32px rgba(0,0,0,.24);
+  transform:translateY(-4px);
+}
+.client-logo:hover img{transform:scale(1.04);}
+.client-logo:focus-within{
+  outline:3px solid var(--c-orange);
+  outline-offset:3px;
 }
 
 /* ============ TESTIMONIALS ============ */
@@ -1016,7 +1028,9 @@ select option{background:#0b1330;color:#fff;}
   .testi-grid{grid-template-columns:1fr;}
   .pricing-grid{grid-template-columns:1fr;}
   .footer-grid{grid-template-columns:1fr;gap:36px;}
-  .clients-strip{grid-template-columns:repeat(2,1fr);}
+  .clients-strip{grid-template-columns:repeat(2,1fr);gap:12px;}
+  .client-logo{min-height:104px;padding:10px;}
+  .client-logo img{height:80px;}
   .hero-cta{flex-direction:column;align-items:stretch;}
   .hero-stats{gap:26px;}
   .form-row{grid-template-columns:1fr;}
