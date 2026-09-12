@@ -54,8 +54,8 @@ Positionner BRAIN comme une agence premium, créative et technologique, capable 
 
 ## 🖼️ Médias utilisés
 
-- **Logo officiel BRAIN** intégré dans le header et le footer de toutes les pages (`images/brain-icon.png`, fond transparent, extrait du logo fourni par le client).
-- L'affiche BRAIN officielle fournie par le client est intégrée comme visuel principal (hero + service Branding + portfolio) : `images/brain-branding-poster.png`.
+- **Logo officiel BRAIN** intégré dans le header et le footer de toutes les pages (`ASSET/brain-icon.png`, fond transparent, extrait du logo fourni par le client).
+- L'affiche BRAIN officielle fournie par le client est intégrée comme visuel principal (hero + service Branding + portfolio) : `ASSET/brain-branding-poster.png`.
 - Les visuels illustrant les autres services (web, social media, design, films, live, digitalisation, équipe) proviennent de banques d'images libres de droit (Creative Commons / Domaine public), sélectionnées pour correspondre à l'ambiance premium bleu/orange/noir demandée.
 - **Note** : les tentatives de génération d'images IA sur mesure (studio créatif, caméra, dashboard, etc.) ont échoué en raison d'un manque de crédits sur le compte au moment de la création. Le site utilise donc des photos libres de droit en remplacement. Il est possible de régénérer ces visuels plus tard si des crédits sont disponibles, ou de les remplacer par les vraies photos de l'agence BRAIN.
 
@@ -112,7 +112,7 @@ css/
   └── style.css        (design system complet : couleurs, composants, responsive)
 js/
   └── main.js           (navigation, animations, filtres portfolio, validation formulaire)
-images/
+ASSET/
   ├── brain-branding-poster.png   (affiche officielle BRAIN fournie par le client)
   ├── service-web.jpg
   ├── service-social.jpg
@@ -132,7 +132,7 @@ images/
 - **Logo officiel BRAIN** : le logo utilisé dans le header/footer est une icône Font Awesome générique (cerveau) en attendant le fichier logo officiel vectoriel. Un emplacement est prévu pour l'intégrer facilement (`.brain-icon`).
 - **Vrais témoignages et logos clients** : les cartes témoignages et logos clients sont des emplacements (placeholders) génériques, comme demandé — aucun nom réel n'a été inventé.
 - **Prix des offres** : volontairement absents, remplacés par « Demander un devis » comme demandé.
-- **Vraies images/vidéos de production BRAIN** : les visuels de service sont des photos libres de droit en attendant les vrais visuels de l'agence.
+- **Vraies ASSET/vidéos de production BRAIN** : les visuels de service sont des photos libres de droit en attendant les vrais visuels de l'agence.
 - **Carte Google Maps** : intégrée en mode générique (recherche "Abidjan, Côte d'Ivoire") faute d'adresse précise fournie.
 
 ## 📈 Recommandations pour la suite
