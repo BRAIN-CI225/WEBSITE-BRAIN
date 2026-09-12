@@ -55,7 +55,7 @@ Positionner BRAIN comme une agence premium, créative et technologique, capable 
 ## 🖼️ Médias utilisés
 
 - **Logo officiel BRAIN** intégré dans le header et le footer de toutes les pages (`ASSET/brain-icon.png`, fond transparent, extrait du logo fourni par le client).
-- L'affiche BRAIN officielle fournie par le client est intégrée comme visuel principal (hero + service Branding + portfolio) : `ASSET/brain-branding-poster.png`.
+- Le visuel Branding identifié par contenu est utilisé dans les cartes de services, les pages détail et le portfolio : `ASSET/SERVICES/branding.png`.
 - Les visuels illustrant les autres services (web, social media, design, films, live, digitalisation, équipe) proviennent de banques d'images libres de droit (Creative Commons / Domaine public), sélectionnées pour correspondre à l'ambiance premium bleu/orange/noir demandée.
 - **Note** : les tentatives de génération d'images IA sur mesure (studio créatif, caméra, dashboard, etc.) ont échoué en raison d'un manque de crédits sur le compte au moment de la création. Le site utilise donc des photos libres de droit en remplacement. Il est possible de régénérer ces visuels plus tard si des crédits sont disponibles, ou de les remplacer par les vraies photos de l'agence BRAIN.
 
@@ -116,6 +116,14 @@ ASSET/
   ├── brain-branding-poster.png   (affiche officielle BRAIN fournie par le client)
   ├── NOS CLIENTS.png              (planche source des logos clients)
   ├── clients/                     (logos clients extraits et uniformisés)
+  ├── SERVICES/                    (visuels identifiés par contenu pour les 7 services)
+  │   ├── branding.jpg             (version web optimisée, source branding.png)
+  │   ├── web.jpg                  (version web optimisée, source web.png)
+  │   ├── social.jpg               (version web optimisée, source social.png)
+  │   ├── design.jpg
+  │   ├── films.jpg                (version web optimisée, source films.png)
+  │   ├── live.jpg                 (version web optimisée, source live.png)
+  │   └── digitalisation.jpg       (version web optimisée, source digitalisation.png)
   ├── service-web.jpg
   ├── service-social.jpg
   ├── service-design.jpg
