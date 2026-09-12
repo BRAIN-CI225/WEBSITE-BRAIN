@@ -1133,3 +1133,28 @@ select option{background:#0b1330;color:#fff;}
   .hero-slide-media{transform:none;}
   .hero-progress span.is-running{animation:none;width:100%;}
 }
+
+/* ============ HOMEPAGE DISPLAY TYPOGRAPHY ============ */
+#hero h1{
+  font-size:clamp(2.35rem,5vw,4.5rem);
+  line-height:1.06;
+  letter-spacing:0;
+  max-width:620px;
+  text-wrap:balance;
+}
+#hero h1 span{display:inline-block;}
+#hero .hero-subtitle{line-height:1.35;max-width:560px;}
+#expertises .section-title,#portfolio-home .section-title,#approche .section-title,#cta-final h2{
+  text-wrap:balance;
+  line-height:1.08;
+}
+@media(max-width:768px){
+  #hero h1{
+    font-size:clamp(2.1rem,9.2vw,3rem);
+    line-height:1.08;
+    max-width:100%;
+  }
+  #hero .hero-subtitle{font-size:1rem;max-width:30ch;}
+  #hero .hero-text{font-size:.94rem;line-height:1.55;max-width:38ch;}
+  #expertises .section-title,#portfolio-home .section-title,#approche .section-title,#cta-final h2{font-size:clamp(1.85rem,8vw,2.6rem);}
+}
