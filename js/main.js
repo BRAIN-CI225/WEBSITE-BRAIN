@@ -15,6 +15,96 @@ document.addEventListener('DOMContentLoaded', function () {
   handleHeaderScroll();
   window.addEventListener('scroll', handleHeaderScroll);
 
+  /* ---------- HOMEPAGE HERO SLIDER ---------- */
+  const heroSlider = document.getElementById('hero-slider');
+  if(heroSlider){
+    const heroSlides = [
+      {label:'Identité visuelle & Branding', image:'ASSET/SERVICES/branding.jpg', title:'Identité visuelle<br><span>& Branding</span>', subtitle:'Une image qui vous ressemble.', description:'Créons une identité forte, cohérente et mémorable pour votre marque.', cta:'Découvrir le branding', href:'service-branding.html', icon:'fa-palette'},
+      {label:'Création Web & E-commerce', image:'ASSET/SERVICES/developpement-web-mobile.jpg', title:'Création Web<br><span>& E-commerce</span>', subtitle:'Votre présence digitale commence ici.', description:'Des sites modernes, rapides et conçus pour transformer vos visiteurs en clients.', cta:'Créer mon site', href:'service-web.html', icon:'fa-laptop-code'},
+      {label:'Réseaux sociaux', image:'ASSET/SERVICES/social.jpg', title:'Réseaux sociaux<br><span>& Community Management</span>', subtitle:'Faites vivre votre marque au quotidien.', description:'Stratégie, contenus, animation et publicité pour développer votre communauté.', cta:'Développer ma marque', href:'service-social.html', icon:'fa-hashtag'},
+      {label:'Design graphique', image:'ASSET/SERVICES/design.jpg', title:'Design graphique<br><span>& Contenus</span>', subtitle:'Vos idées méritent de belles images.', description:'Affiches, brochures, contenus digitaux et supports de communication qui marquent.', cta:'Découvrir nos créations', href:'service-design.html', icon:'fa-pen-ruler'},
+      {label:'Films publicitaires', image:'ASSET/SERVICES/films.jpg', title:'Films publicitaires<br><span>& Institutionnels</span>', subtitle:'Racontez votre histoire autrement.', description:'De la conception au tournage et à la post-production, nous donnons vie à vos projets.', cta:'Produire mon film', href:'service-films.html', icon:'fa-clapperboard'},
+      {label:'Captation & Live', image:'ASSET/SERVICES/live.jpg', title:'Captation vidéo<br><span>& Live</span>', subtitle:'Ne laissez aucun moment important disparaître.', description:'Événements, conférences, cérémonies, reportages et streaming professionnel.', cta:'Couvrir mon événement', href:'service-live.html', icon:'fa-video'},
+      {label:'Digitalisation', image:'ASSET/SERVICES/digitalisation.jpg', title:'Digitalisation<br><span>des entreprises</span>', subtitle:'Transformez votre façon de travailler.', description:'Automatisation, applications, outils de gestion et solutions digitales sur mesure.', cta:'Digitaliser mon entreprise', href:'service-digital.html', icon:'fa-gears'}
+    ];
+    const dots = document.getElementById('hero-dots');
+    const progressBar = document.getElementById('hero-progress-bar');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let activeHero = 0;
+    let heroTimer;
+    let heroPaused = false;
+    let touchStartX = 0;
+
+    function createHeroMedia(slide, index){
+      if(slide.video){
+        const video = document.createElement('video');
+        video.className = 'hero-slide-media';
+        video.autoplay = true; video.muted = true; video.loop = true; video.playsInline = true;
+        video.preload = index === 0 ? 'auto' : 'none';
+        video.poster = slide.image;
+        video.src = slide.video;
+        video.addEventListener('error', function(){
+          const fallback = document.createElement('img');
+          fallback.className = 'hero-slide-media'; fallback.src = slide.image; fallback.alt = slide.label;
+          video.replaceWith(fallback);
+        });
+        return video;
+      }
+      const image = document.createElement('img');
+      image.className = 'hero-slide-media'; image.src = slide.image; image.alt = slide.label;
+      image.loading = index === 0 ? 'eager' : 'lazy';
+      return image;
+    }
+
+    function renderHero(){
+      heroSlider.innerHTML = '';
+      heroSlides.forEach(function(slide, index){
+        const article = document.createElement('article');
+        article.className = 'hero-slide' + (index === 0 ? ' is-active' : '');
+        article.setAttribute('aria-hidden', index === 0 ? 'false' : 'true');
+        article.appendChild(createHeroMedia(slide, index));
+        article.insertAdjacentHTML('beforeend', '<div class="hero-slide-content"><div class="hero-badge"><span class="dot"></span>' + slide.label + ' — Abidjan</div><h1>' + slide.title + '</h1><p class="hero-subtitle">' + slide.subtitle + '</p><p class="hero-text">' + slide.description + '</p><div class="hero-cta"><a class="btn btn-primary" href="' + slide.href + '">' + slide.cta + ' <i class="fa-solid fa-arrow-right"></i></a><a class="btn btn-outline" href="portfolio.html">Voir nos réalisations</a></div><div class="hero-proof"><span><i class="fa-solid ' + slide.icon + '"></i> Expertise BRAIN</span><span><i class="fa-solid fa-location-dot"></i> Abidjan, Côte d\'Ivoire</span></div></div>');
+        heroSlider.appendChild(article);
+        const dot = document.createElement('button');
+        dot.className = 'hero-dot' + (index === 0 ? ' is-active' : ''); dot.type = 'button'; dot.setAttribute('aria-label', 'Afficher la slide ' + (index + 1) + ': ' + slide.label); dot.setAttribute('aria-current', index === 0 ? 'true' : 'false');
+        dot.addEventListener('click', function(){ goToHero(index); });
+        dots.appendChild(dot);
+      });
+    }
+
+    function resetHeroProgress(){
+      if(!progressBar) return;
+      progressBar.classList.remove('is-running');
+      void progressBar.offsetWidth;
+      progressBar.classList.add('is-running');
+    }
+    function goToHero(index){
+      const slides = heroSlider.querySelectorAll('.hero-slide');
+      const heroDots = dots.querySelectorAll('.hero-dot');
+      activeHero = (index + heroSlides.length) % heroSlides.length;
+      slides.forEach(function(slide, slideIndex){ slide.classList.toggle('is-active', slideIndex === activeHero); slide.setAttribute('aria-hidden', slideIndex === activeHero ? 'false' : 'true'); });
+      heroDots.forEach(function(dot, dotIndex){ dot.classList.toggle('is-active', dotIndex === activeHero); dot.setAttribute('aria-current', dotIndex === activeHero ? 'true' : 'false'); });
+      resetHeroProgress();
+    }
+    function scheduleHero(){
+      window.clearTimeout(heroTimer);
+      if(!heroPaused){ heroTimer = window.setTimeout(function(){ goToHero(activeHero + 1); scheduleHero(); }, 6000); }
+    }
+    function pauseHero(){ heroPaused = true; window.clearTimeout(heroTimer); }
+    function resumeHero(){ heroPaused = false; scheduleHero(); }
+
+    renderHero();
+    document.querySelector('[data-hero-prev]').addEventListener('click', function(){ goToHero(activeHero - 1); scheduleHero(); });
+    document.querySelector('[data-hero-next]').addEventListener('click', function(){ goToHero(activeHero + 1); scheduleHero(); });
+    heroSlider.addEventListener('mouseenter', pauseHero); heroSlider.addEventListener('mouseleave', resumeHero);
+    heroSlider.addEventListener('touchstart', function(event){ touchStartX = event.changedTouches[0].screenX; }, {passive:true});
+    heroSlider.addEventListener('touchend', function(event){ const distance = event.changedTouches[0].screenX - touchStartX; if(Math.abs(distance) > 50){ goToHero(activeHero + (distance < 0 ? 1 : -1)); scheduleHero(); } }, {passive:true});
+    document.addEventListener('keydown', function(event){ if(event.key === 'ArrowLeft') goToHero(activeHero - 1); if(event.key === 'ArrowRight') goToHero(activeHero + 1); });
+    document.addEventListener('visibilitychange', function(){ if(document.hidden) pauseHero(); else if(!reduceMotion) resumeHero(); });
+    resetHeroProgress();
+    scheduleHero();
+  }
+
   /* ---------- MOBILE NAV ---------- */
   const burger = document.getElementById('burger');
   const mobileNav = document.getElementById('mobile-nav');

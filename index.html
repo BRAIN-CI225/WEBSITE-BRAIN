@@ -78,41 +78,21 @@
   <a href="contact.html" class="btn btn-primary btn-block">Demander un devis</a>
 </nav>
 
-<!-- ===================== HERO ===================== -->
-<section id="hero">
-  <div class="container">
-    <div class="hero-grid">
-      <div class="hero-content">
-        <div class="hero-badge"><span class="dot"></span> Agence Digitale & Créative — Abidjan, Côte d'Ivoire</div>
-        <h1>Donnez à votre marque<br><span>une nouvelle dimension</span></h1>
-        <p class="hero-subtitle">Stratégie • Création • Digital • Audiovisuel • Transformation numérique</p>
-        <p class="hero-text">BRAIN accompagne les entreprises, institutions et organisations dans la construction de leur image, leur communication et leur transformation digitale.</p>
-        <div class="hero-cta">
-          <a href="services.html" class="btn btn-primary">Découvrir nos services</a>
-          <a href="contact.html" class="btn btn-outline">Parler à un expert</a>
-        </div>
-        <div class="hero-stats">
-          <div class="stat"><b data-counter="7">0</b><span>Pôles d'expertise</span></div>
-          <div class="stat"><b data-counter="120" data-suffix="+">0</b><span>Projets réalisés</span></div>
-          <div class="stat"><b data-counter="98" data-suffix="%">0</b><span>Clients satisfaits</span></div>
-        </div>
-      </div>
-      <div class="hero-visual">
-        <div class="frame">
-          <img src="ASSET/SERVICES/branding.jpg" alt="BRAIN - Identité visuelle et branding premium" loading="eager">
-        </div>
-        <div class="floating-card fc-1">
-          <i class="fa-solid fa-video"></i>
-          <div><div class="fc-title">Production audiovisuelle</div><div class="fc-sub">Studio haut de gamme</div></div>
-        </div>
-        <div class="floating-card fc-2">
-          <i class="fa-solid fa-chart-line"></i>
-          <div><div class="fc-title">+98% satisfaction</div><div class="fc-sub">Clients accompagnés</div></div>
-        </div>
-      </div>
+<!-- ===================== HERO SLIDER ===================== -->
+<section id="hero" aria-label="Les expertises BRAIN">
+  <div class="hero-slider" id="hero-slider" aria-live="polite">
+    <div class="hero-slider-loading">
+      <span class="hero-badge"><span class="dot"></span> Agence digitale & créative — Abidjan</span>
+      <h1>Donnez à votre marque<br><span>une nouvelle dimension</span></h1>
     </div>
   </div>
-  <div class="scroll-indicator"><span>Scroll</span><span class="line"></span></div>
+  <div class="hero-controls" aria-label="Navigation du diaporama">
+    <button class="hero-arrow" type="button" data-hero-prev aria-label="Slide précédent"><i class="fa-solid fa-arrow-left"></i></button>
+    <div class="hero-dots" id="hero-dots"></div>
+    <button class="hero-arrow" type="button" data-hero-next aria-label="Slide suivant"><i class="fa-solid fa-arrow-right"></i></button>
+  </div>
+  <div class="hero-progress" aria-hidden="true"><span id="hero-progress-bar"></span></div>
+  <div class="scroll-indicator"><span>Découvrir</span><span class="line"></span></div>
 </section>
 
 <!-- ===================== NOS EXPERTISES ===================== -->
@@ -120,8 +100,8 @@
   <div class="glow-orb glow-blue" style="width:500px;height:500px;top:0;left:-200px;"></div>
   <div class="container">
     <div class="section-tag">Nos expertises</div>
-    <h2 id="expertises-title" class="section-title" data-aos="fade-up">7 pôles pour faire grandir<br><span class="accent">votre marque</span></h2>
-    <p class="section-sub" data-aos="fade-up">De la stratégie de marque à la production audiovisuelle, en passant par le digital : BRAIN réunit toutes les expertises nécessaires pour transformer votre communication.</p>
+    <h2 id="expertises-title" class="section-title" data-aos="fade-up">Tout ce qu'il faut pour faire grandir<br><span class="accent">votre marque</span></h2>
+    <p class="section-sub" data-aos="fade-up">De votre identité visuelle à votre transformation digitale, BRAIN réunit les expertises nécessaires pour construire, développer et faire rayonner votre entreprise.</p>
 
     <div class="services-grid">
       <a href="service-branding.html" class="service-card big" data-aos="zoom-in">
@@ -241,7 +221,7 @@
 <section id="approche">
   <div class="container">
     <div class="section-tag center">Notre approche</div>
-    <h2 class="section-title center" data-aos="fade-up">Une méthode claire.<br><span class="accent">Des résultats mesurables.</span></h2>
+    <h2 class="section-title center" data-aos="fade-up">Une méthode simple.<br><span class="accent">Des résultats concrets.</span></h2>
     <p class="section-sub center" data-aos="fade-up">Chaque projet BRAIN suit un processus rigoureux en 5 étapes, du premier échange jusqu'à l'optimisation continue.</p>
 
     <div class="timeline-grid">
@@ -267,8 +247,8 @@
       </div>
       <div class="timeline-step" data-aos="fade-up" data-aos-delay="400">
         <div class="ts-circle">05</div>
-        <h4>Mesurer</h4>
-        <p>Analyser les résultats et optimiser.</p>
+        <h4>Déployer</h4>
+        <p>Mettre en ligne, suivre et faire grandir.</p>
       </div>
     </div>
   </div>
@@ -278,7 +258,7 @@
 <section id="portfolio-home">
   <div class="container">
     <div class="section-tag">Portfolio</div>
-    <h2 class="section-title" data-aos="fade-up">Nos <span class="accent">réalisations</span></h2>
+    <h2 class="section-title" data-aos="fade-up">Des idées qui <span class="accent">prennent vie.</span></h2>
     <p class="section-sub" data-aos="fade-up">Un aperçu de nos projets récents en branding, web, réseaux sociaux, design, audiovisuel, événementiel et digital.</p>
 
     <div class="portfolio-grid">
@@ -441,8 +421,8 @@
 <section id="cta-final" style="padding-bottom:0;">
   <div class="container">
     <div class="cta-section" data-aos="zoom-in">
-      <h2>Votre prochain projet<br>commence ici.</h2>
-      <p>Branding, communication digitale, audiovisuel, création web ou transformation numérique : parlons de votre projet.</p>
+      <h2>Vous avez un projet ?</h2>
+      <p>Parlons-en et donnons-lui une nouvelle dimension.</p>
       <div class="cta-btns">
         <a href="contact.html" class="btn btn-primary">Demander un devis</a>
         <a href="contact.html" class="btn btn-outline">Nous contacter</a>
@@ -513,7 +493,7 @@
 <a href="https://wa.me/2250711356324" id="whatsapp-float" target="_blank" aria-label="Contacter sur WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
 <button id="back-to-top" aria-label="Retour en haut"><i class="fa-solid fa-arrow-up"></i></button>
 
-<script src="js/main.js"></script>
+<script src="js/main.js?v=homepage-slider"></script>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
 </html>
