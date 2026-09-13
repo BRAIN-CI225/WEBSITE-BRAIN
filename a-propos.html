@@ -12,13 +12,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css?v=2.2">
 </head>
 <body>
 
 <header id="site-header">
   <div class="container">
-    <a href="index.html" class="brand-logo"><span class="brain-icon"><img src="ASSET/brain-icon.png" alt="BRAIN logo"></span><span class="brand-text"><span class="name">BRAIN</span><span class="tagline">Attirer • Convertir • Fidéliser</span></span></a>
+    <a href="index.html" class="brand-logo"><span class="brain-icon"><img src="ASSET/brain-mark.png" alt="BRAIN logo"></span><span class="brand-text"><span class="name">BRAIN</span><span class="tagline">Attirer • Convertir • Fidéliser</span></span></a>
     <nav class="main-nav"><ul>
       <li><a href="index.html">Accueil</a></li>
       <li><a href="services.html">Nos Services</a></li>
@@ -34,15 +34,20 @@
 </header>
 <div class="nav-overlay" id="nav-overlay"></div>
 <nav class="mobile-nav" id="mobile-nav">
-  <a href="index.html">Accueil</a><a href="services.html">Nos Services</a><a href="portfolio.html">Réalisations</a><a href="a-propos.html">À propos</a><a href="contact.html">Contact</a>
+  <a href="index.html"><i class="fa-solid fa-house"></i>Accueil</a>
+  <a href="services.html"><i class="fa-solid fa-layer-group"></i>Nos Services</a>
+  <a href="portfolio.html"><i class="fa-solid fa-images"></i>Réalisations</a>
+  <a href="a-propos.html"><i class="fa-solid fa-circle-info"></i>À propos</a>
+  <a href="contact.html"><i class="fa-solid fa-envelope"></i>Contact</a>
   <a href="contact.html" class="btn btn-primary btn-block">Demander un devis</a>
 </nav>
 
 <section class="page-hero">
   <div class="container">
-    <div class="breadcrumb"><a href="index.html">Accueil</a> / À propos</div>
-    <h1>BRAIN, une vision.<br>Des solutions. <span style="background:var(--grad-brand);-webkit-background-clip:text;background-clip:text;color:transparent;">Des résultats.</span></h1>
-    <p>Une agence qui réunit communication, créativité, audiovisuel, technologie et digitalisation pour faire grandir les entreprises.</p>
+    <div class="page-eyebrow" data-aos="fade-up">À propos</div>
+    <h1 data-aos="fade-up" data-aos-delay="80">BRAIN, une vision.<br>Des solutions. <span>Des résultats.</span></h1>
+    <p data-aos="fade-up" data-aos-delay="160">Une agence qui réunit communication, créativité, audiovisuel, technologie et digitalisation pour faire grandir les entreprises.</p>
+    <div class="breadcrumb" data-aos="fade-up" data-aos-delay="240"><a href="index.html">Accueil</a> <span class="bc-sep">/</span> <span class="bc-cur">À propos</span></div>
   </div>
 </section>
 
@@ -56,8 +61,8 @@
       <div data-aos="fade-left">
         <div class="section-tag">Qui sommes-nous</div>
         <h2 class="section-title" style="font-size:clamp(1.8rem,3.5vw,2.6rem);">L'agence qui réunit créativité,<br>communication et technologie</h2>
-        <p style="color:var(--c-grey);margin-bottom:24px;">BRAIN est une agence de communication digitale, audiovisuelle, créative et de transformation numérique basée à Abidjan, Côte d'Ivoire. Nous accompagnons les entreprises, institutions et organisations dans la construction de leur image, leur communication et leur transformation digitale.</p>
-        <p style="color:var(--c-grey);margin-bottom:30px;">Notre force réside dans la réunion, au sein d'une seule agence, de toutes les compétences nécessaires pour porter un projet de bout en bout : de la stratégie à la production, du branding à la digitalisation.</p>
+        <p style="color:var(--brain-muted);margin-bottom:24px;">BRAIN est une agence de communication digitale, audiovisuelle, créative et de transformation numérique basée à Abidjan, Côte d'Ivoire. Nous accompagnons les entreprises, institutions et organisations dans la construction de leur image, leur communication et leur transformation digitale.</p>
+        <p style="color:var(--brain-muted);margin-bottom:30px;">Notre force réside dans la réunion, au sein d'une seule agence, de toutes les compétences nécessaires pour porter un projet de bout en bout : de la stratégie à la production, du branding à la digitalisation.</p>
         <div class="about-pillars">
           <div class="pillar"><i class="fa-solid fa-comments"></i> Communication</div>
           <div class="pillar"><i class="fa-solid fa-lightbulb"></i> Créativité</div>
@@ -123,7 +128,7 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a href="index.html" class="brand-logo"><span class="brain-icon"><img src="ASSET/brain-icon.png" alt="BRAIN logo"></span><span class="brand-text"><span class="name">BRAIN</span></span></a>
+        <a href="index.html" class="brand-logo"><span class="brain-icon"><img src="ASSET/brain-mark.png" alt="BRAIN logo"></span><span class="brand-text"><span class="name">BRAIN</span></span></a>
         <div class="footer-signature">Attirer • Convertir • Fidéliser</div>
         <p>Agence de communication digitale, audiovisuelle, créative et de transformation numérique basée à Abidjan, Côte d'Ivoire.</p>
         <div class="social-row">
@@ -165,7 +170,7 @@
 
 <a href="https://wa.me/2250711356324" id="whatsapp-float" target="_blank" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
 <button id="back-to-top" aria-label="Retour en haut"><i class="fa-solid fa-arrow-up"></i></button>
-<script src="js/main.js"></script>
+<script src="js/main.js?v=2.0"></script>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
 </html>

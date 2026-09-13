@@ -38,7 +38,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-<link rel="stylesheet" href="css/style.css?v=homepage-type">
+<link rel="stylesheet" href="css/style.css?v=2.2">
 </head>
 <body>
 
@@ -46,7 +46,7 @@
 <header id="site-header">
   <div class="container">
     <a href="index.html" class="brand-logo" aria-label="BRAIN - Accueil">
-      <span class="brain-icon"><img src="ASSET/brain-icon.png" alt="BRAIN logo"></span>
+      <span class="brain-icon"><img src="ASSET/brain-mark.png" alt="BRAIN logo"></span>
       <span class="brand-text">
         <span class="name">BRAIN</span>
         <span class="tagline">Attirer • Convertir • Fidéliser</span>
@@ -70,11 +70,11 @@
 
 <div class="nav-overlay" id="nav-overlay"></div>
 <nav class="mobile-nav" id="mobile-nav" aria-label="Navigation mobile">
-  <a href="index.html">Accueil</a>
-  <a href="services.html">Nos Services</a>
-  <a href="portfolio.html">Réalisations</a>
-  <a href="a-propos.html">À propos</a>
-  <a href="contact.html">Contact</a>
+  <a href="index.html"><i class="fa-solid fa-house"></i>Accueil</a>
+  <a href="services.html"><i class="fa-solid fa-layer-group"></i>Nos Services</a>
+  <a href="portfolio.html"><i class="fa-solid fa-images"></i>Réalisations</a>
+  <a href="a-propos.html"><i class="fa-solid fa-circle-info"></i>À propos</a>
+  <a href="contact.html"><i class="fa-solid fa-envelope"></i>Contact</a>
   <a href="contact.html" class="btn btn-primary btn-block">Demander un devis</a>
 </nav>
 
@@ -82,7 +82,7 @@
 <section id="hero" aria-label="Les expertises BRAIN">
   <div class="hero-slider" id="hero-slider" aria-live="polite">
     <div class="hero-slider-loading">
-      <span class="hero-badge"><span class="dot"></span> Agence digitale & créative — Abidjan</span>
+      <div class="hero-badge"><span class="dot"></span>Agence digitale & créative — Abidjan</div>
       <h1>Donnez à votre marque<br><span>une nouvelle dimension</span></h1>
     </div>
   </div>
@@ -194,21 +194,25 @@
 
     <div class="why-grid">
       <div class="why-card" data-aos="fade-up">
+        <span class="wc-icon"><i class="fa-solid fa-lightbulb"></i></span>
         <span class="wc-num">01</span>
         <h3>Créativité</h3>
         <p>Des concepts originaux qui donnent de la personnalité aux marques.</p>
       </div>
       <div class="why-card" data-aos="fade-up" data-aos-delay="100">
+        <span class="wc-icon"><i class="fa-solid fa-microchip"></i></span>
         <span class="wc-num">02</span>
         <h3>Technologie</h3>
         <p>Des solutions digitales adaptées aux nouveaux usages.</p>
       </div>
       <div class="why-card" data-aos="fade-up" data-aos-delay="200">
+        <span class="wc-icon"><i class="fa-solid fa-video"></i></span>
         <span class="wc-num">03</span>
         <h3>Expertise audiovisuelle</h3>
         <p>De la conception au tournage jusqu'à la post-production.</p>
       </div>
       <div class="why-card" data-aos="fade-up" data-aos-delay="300">
+        <span class="wc-icon"><i class="fa-solid fa-handshake"></i></span>
         <span class="wc-num">04</span>
         <h3>Accompagnement</h3>
         <p>Une approche personnalisée orientée résultats.</p>
@@ -431,13 +435,51 @@
   </div>
 </section>
 
+<!-- ===================== CONTACT ===================== -->
+<section id="contact" aria-labelledby="contact-title">
+  <div class="glow-orb glow-orange" style="width:480px;height:480px;top:18%;left:-180px;"></div>
+  <div class="glow-orb glow-blue" style="width:420px;height:420px;bottom:10%;right:-160px;"></div>
+  <div class="container">
+    <div class="section-tag center">Contact</div>
+    <h2 id="contact-title" class="section-title center" data-aos="fade-up">Contactez-<span class="accent">nous</span></h2>
+    <p class="section-sub center" data-aos="fade-up">Un projet, une question, un devis ? Notre équipe à Abidjan vous répond rapidement.</p>
+
+    <div class="contact-band" data-aos="fade-up">
+      <a href="tel:+2250711356324" class="contact-tile">
+        <i class="fa-solid fa-phone"></i>
+        <span class="ct-label">Téléphone</span>
+        <span class="ct-value">07 11 35 63 24</span>
+      </a>
+      <a href="https://wa.me/2250711356324" target="_blank" class="contact-tile">
+        <i class="fa-brands fa-whatsapp"></i>
+        <span class="ct-label">WhatsApp</span>
+        <span class="ct-value">Écrivez-nous</span>
+      </a>
+      <a href="mailto:contact@braincobusiness.com" class="contact-tile">
+        <i class="fa-solid fa-envelope"></i>
+        <span class="ct-label">Email</span>
+        <span class="ct-value">contact@braincobusiness.com</span>
+      </a>
+      <a href="services.html" class="contact-tile">
+        <i class="fa-solid fa-globe"></i>
+        <span class="ct-label">Site web</span>
+        <span class="ct-value">www.braincobusiness.com</span>
+      </a>
+    </div>
+
+    <div class="center btn-cta-wrap" data-aos="fade-up">
+      <a href="contact.html" class="btn btn-primary">Demander un devis <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
 <!-- ===================== FOOTER ===================== -->
 <footer>
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
         <a href="index.html" class="brand-logo">
-          <span class="brain-icon"><img src="ASSET/brain-icon.png" alt="BRAIN logo"></span>
+          <span class="brain-icon"><img src="ASSET/brain-mark.png" alt="BRAIN logo"></span>
           <span class="brand-text">
             <span class="name">BRAIN</span>
           </span>
@@ -493,7 +535,7 @@
 <a href="https://wa.me/2250711356324" id="whatsapp-float" target="_blank" aria-label="Contacter sur WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
 <button id="back-to-top" aria-label="Retour en haut"><i class="fa-solid fa-arrow-up"></i></button>
 
-<script src="js/main.js?v=homepage-slider"></script>
+<script src="js/main.js?v=2.0"></script>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
 </html>
