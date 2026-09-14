@@ -5,12 +5,6 @@
 -- Super Admin = CRUD complet (via table admins).
 -- ============================================================
 
--- ---------- Helper : est-ce un super admin ? ----------
-create or replace function public.is_super_admin()
-returns boolean language sql security definer stable as $$
-  select exists(select 1 from public.admins where user_id = auth.uid());
-$$;
-
 -- ============================================================
 -- ADMINS
 -- ============================================================
@@ -22,6 +16,14 @@ create table if not exists public.admins(
 
 alter table public.admins enable row level security;
 
+-- ---------- Helper : est-ce un super admin ? ----------
+-- (Doit être créé APRÈS la table admins : PostgreSQL valide le corps à la création.)
+-- search_path figé = durcissement pour une fonction SECURITY DEFINER.
+create or replace function public.is_super_admin()
+returns boolean language sql security definer stable set search_path = pg_catalog as $$
+  select exists(select 1 from public.admins where user_id = auth.uid());
+$$;
+
 create policy "super_admin gestion admins"
   on public.admins for all
   using (public.is_super_admin())
@@ -30,7 +32,7 @@ create policy "super_admin gestion admins"
 -- Bootstrapping : le premier utilisateur authentifié devient super admin.
 -- À retirer une fois le compte admin créé.
 create or replace function public.bootstrap_first_admin()
-returns trigger language plpgsql security definer as $$
+returns trigger language plpgsql security definer set search_path = pg_catalog as $$
 begin
   if not exists(select 1 from public.admins) then
     insert into public.admins(user_id, role) values (new.id, 'super_admin');
@@ -481,6 +483,15 @@ insert into public.page_sections (page_id, section_type, title, subtitle, conten
  ),
  'visible', 3, 'published'),
 ((select id from public.pages where slug = 'home'),
+ 'statistics',
+ 'Des résultats **qui parlent**',
+ 'Quelques chiffres qui illustrent notre engagement et l''impact de nos réalisations.',
+ null,
+ null,
+ 'none',
+ jsonb_build_object('tag','Chiffres clés','limit',4,'show_icon',true),
+ 'visible', 4, 'published'),
+((select id from public.pages where slug = 'home'),
  'video',
  'Notre **showreel**',
  'Une immersion dans la créativité, la technologie et l''expertise audiovisuelle de BRAIN.',
@@ -488,7 +499,7 @@ insert into public.page_sections (page_id, section_type, title, subtitle, conten
  null,
  'blue-orb',
  jsonb_build_object('tag','BRAIN en images','video_url','6NziLBrldFo','provider','youtube','autoplay',true,'loop',true,'controls',true),
- 'visible', 4, 'published'),
+ 'visible', 5, 'published'),
 ((select id from public.pages where slug = 'home'),
  'text',
  'Une méthode simple. **Des résultats concrets.**',
@@ -501,16 +512,16 @@ Déployer|Mettre en ligne, suivre et faire grandir.',
  null,
  'none',
  jsonb_build_object('tag','Notre approche','layout','timeline','align','center'),
- 'visible', 5, 'published'),
+ 'visible', 6, 'published'),
 ((select id from public.pages where slug = 'home'),
- 'projects',
+ 'portfolio',
  'Des idées qui **prennent vie.**',
  'Un aperçu de nos projets récents en branding, web, réseaux sociaux, design, audiovisuel, événementiel et digital.',
  null,
  null,
  'none',
- jsonb_build_object('tag','Portfolio','limit',3,'columns',3,'show_category',true,'show_description',true,'show_cta',true,'cta_text','Voir tout le portfolio'),
- 'visible', 6, 'published'),
+ jsonb_build_object('tag','Portfolio','limit',3,'columns_desktop',3,'columns_tablet',2,'columns_mobile',1,'show_category',true,'show_description',true,'show_cta',true,'cta_text','Voir tout le portfolio'),
+ 'visible', 7, 'published'),
 ((select id from public.pages where slug = 'home'),
  'logos',
  'Nos **clients**',
@@ -534,9 +545,9 @@ Déployer|Mettre en ligne, suivre et faire grandir.',
    jsonb_build_object('src','ASSET/clients/yes-group.png','alt','YES Group'),
    jsonb_build_object('src','ASSET/clients/ak-group.png','alt','AK Group'),
    jsonb_build_object('src','ASSET/clients/jourdain.png','alt','Jourdain Informatique & Monétique'),
-   jsonb_build_object('src','ASSET/clients/sodishop.png','alt','Sodishop')
- )),
- 'visible', 7, 'published'),
+jsonb_build_object('src','ASSET/clients/sodishop.png','alt','Sodishop')
+  )),
+ 'visible', 8, 'published'),
 ((select id from public.pages where slug = 'home'),
  'testimonials',
  'Ils nous **font confiance**',
@@ -544,8 +555,8 @@ Déployer|Mettre en ligne, suivre et faire grandir.',
  null,
  null,
  'blue-orb',
- jsonb_build_object('tag','Témoignages','limit',3,'column_count',3,'show_rating',true),
- 'visible', 8, 'published'),
+ jsonb_build_object('tag','Témoignages','limit',3,'columns_desktop',3,'columns_tablet',2,'columns_mobile',1,'show_rating',true),
+ 'visible', 9, 'published'),
 ((select id from public.pages where slug = 'home'),
  'pricing',
  'Des solutions adaptées **à vos objectifs**',
@@ -559,10 +570,10 @@ Déployer|Mettre en ligne, suivre et faire grandir.',
      jsonb_build_object('name','Starter','description','Pour les petites entreprises et projets ponctuels.','featured',false,'features', jsonb_build_array('Identité visuelle de base','Supports de communication','Présence digitale essentielle')),
      jsonb_build_object('name','Growth','description','Pour les entreprises souhaitant développer leur visibilité.','featured',true,'features', jsonb_build_array('Branding complet','Site web ou e-commerce','Community management','Contenus réguliers')),
      jsonb_build_object('name','Premium','description','Pour les entreprises ayant besoin d''un accompagnement global.','featured',false,'features', jsonb_build_array('Branding & communication complète','Production audiovisuelle','Stratégie digitale avancée','Suivi mensuel dédié')),
-     jsonb_build_object('name','Entreprise','description','Solutions personnalisées et transformation digitale.','featured',false,'features', jsonb_build_array('Accompagnement 360°','Digitalisation des process','Production sur mesure','Équipe dédiée'))
-   )
- ),
- 'visible', 9, 'published'),
+      jsonb_build_object('name','Entreprise','description','Solutions personnalisées et transformation digitale.','featured',false,'features', jsonb_build_array('Accompagnement 360°','Digitalisation des process','Production sur mesure','Équipe dédiée'))
+    )
+  ),
+ 'visible', 10, 'published'),
 ((select id from public.pages where slug = 'home'),
  'cta',
  'Vous avez un projet ?',
@@ -574,7 +585,7 @@ Déployer|Mettre en ligne, suivre et faire grandir.',
    jsonb_build_object('text','Demander un devis','href','contact.html','style','primary'),
    jsonb_build_object('text','Nous contacter','href','contact.html','style','outline')
  )),
- 'visible', 10, 'published'),
+ 'visible', 11, 'published'),
 ((select id from public.pages where slug = 'home'),
  'contact_form',
  'Contactez-**nous**',
@@ -583,6 +594,6 @@ Déployer|Mettre en ligne, suivre et faire grandir.',
  null,
  'orange-blue-orbs',
  jsonb_build_object('tag','Contact','phone','+2250711356324','phone_display','07 11 35 63 24','whatsapp','2250711356324','email','braincobusiness@gmail.com','website','www.braincobusiness.com','form_action','https://formsubmit.co/braincobusiness@gmail.com'),
- 'visible', 11, 'published')
+ 'visible', 12, 'published')
 
 on conflict do nothing;

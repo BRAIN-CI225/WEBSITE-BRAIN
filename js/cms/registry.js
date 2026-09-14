@@ -725,7 +725,7 @@
         options: [['paragraphs','Paragraphes'],['list','Liste à puces'],['timeline','Timeline étapes'],['cards','Cartes (Titre | Texte)']] },
       { name: 'max_width', label: 'Largeur maximale (px)', type: 'number', default: 0 }
     ]),
-    validate: function (cfg) {
+    validate: function (cfg, s) {
       return (!s.content || !String(s.content).trim()) ? ['Un contenu texte est requis.'] : [];
     },
     render: function (s, ctx) {
@@ -778,7 +778,7 @@
       { name: 'image_ratio', label: 'Format d\'image', type: 'select', options: [['auto','Original'],['16/9','16/9'],['4/3','4/3'],['1/1','Carré']] },
       { name: 'max_width', label: 'Largeur max du texte (px)', type: 'number', default: 0 }
     ].concat(COMMON_SETTINGS).concat([F.background, F.animation, F.paddingTop, F.paddingBottom]),
-    validate: function (cfg) {
+    validate: function (cfg, s) {
       return (!s.image) ? ['Une image est requise.'] : [];
     },
     render: function (s, ctx) {
