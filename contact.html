@@ -56,7 +56,10 @@
     <div class="contact-layout">
       <div data-aos="fade-right">
         <div id="form-success" class="form-success"><i class="fa-solid fa-circle-check"></i> Votre demande a bien été envoyée. Notre équipe vous recontactera très rapidement.</div>
-        <form class="contact-form" id="contact-form" novalidate>
+        <form class="contact-form" id="contact-form" action="https://formsubmit.co/braincobusiness@gmail.com" method="POST" novalidate>
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_subject" value="Nouvelle demande de contact — Site BRAIN">
           <div class="form-row">
             <div class="form-group">
               <label for="nom">Nom complet *</label>
@@ -138,7 +141,7 @@
         <div class="quick-contact-row">
           <a href="https://wa.me/2250711356324" target="_blank" class="qc-btn"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
           <a href="tel:+2250711356324" class="qc-btn"><i class="fa-solid fa-phone"></i> Appeler</a>
-          <a href="mailto:contact@braincobusiness.com" class="qc-btn"><i class="fa-solid fa-envelope"></i> Email</a>
+          <a href="mailto:braincobusiness@gmail.com" class="qc-btn"><i class="fa-solid fa-envelope"></i> Email</a>
         </div>
 
         <div class="map-wrap">
@@ -170,11 +173,10 @@
         <div class="footer-signature">Attirer • Convertir • Fidéliser</div>
         <p>Agence de communication digitale, audiovisuelle, créative et de transformation numérique basée à Abidjan, Côte d'Ivoire.</p>
         <div class="social-row">
-          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-          <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-          <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-          <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          <a href="https://www.facebook.com/Braincobusiness" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="https://www.tiktok.com/@businessbrainco" target="_blank" rel="noopener" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="https://www.linkedin.com/in/business-brain-co-7a06533a8/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="https://www.youtube.com/@businessbrainco" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
         </div>
       </div>
       <div class="footer-col"><h4>Agence</h4><ul>
@@ -208,6 +210,7 @@
 
 <a href="https://wa.me/2250711356324" id="whatsapp-float" target="_blank" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
 <button id="back-to-top" aria-label="Retour en haut"><i class="fa-solid fa-arrow-up"></i></button>
+<script src="js/supabase.js?v=1.0"></script>
 <script src="js/main.js?v=2.1"></script>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>

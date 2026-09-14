@@ -258,6 +258,153 @@ document.addEventListener('DOMContentLoaded', function () {
   videoCloseButtons.forEach(function(button){ button.addEventListener('click', closeVideo); });
   document.addEventListener('keydown', function(event){ if(event.key === 'Escape' && videoModal?.classList.contains('is-open')) closeVideo(); });
 
+  /* ---------- SHOWREEL : lecteur vidéo sur mesure ---------- */
+  (function(){
+    const shell = document.querySelector('[data-video-player]');
+    const playerHost = shell ? shell.querySelector('.yt-player') : null;
+    if(!shell || !playerHost) return;
+    const videoId = shell.getAttribute('data-video-id');
+    if(!videoId) return;
+
+    const bigPlay = shell.querySelector('[data-vp-big-play]');
+    const playBtn = shell.querySelector('[data-vp-play]');
+    const muteBtn = shell.querySelector('[data-vp-mute]');
+    const volumeSlider = shell.querySelector('[data-vp-volume]');
+    const loading = shell.querySelector('[data-vp-loading]');
+    const playIcon = playBtn ? playBtn.querySelector('i') : null;
+    const muteIcon = muteBtn ? muteBtn.querySelector('i') : null;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const autoStart = !reduceMotion;
+
+    let player = null;
+    let muted = true;
+    let volume = 100;
+    let apiReady = false;
+    const pending = [];
+
+    function setPlayUI(playing){
+      if(!playIcon || !playBtn) return;
+      playIcon.className = playing ? 'fa-solid fa-pause' : 'fa-solid fa-play';
+      playBtn.setAttribute('aria-label', playing ? 'Mettre en pause' : 'Lire');
+      shell.classList.toggle('is-paused', !playing);
+    }
+    function setMuteUI(){
+      if(!muteIcon || !muteBtn || !volumeSlider) return;
+      const level = muted ? 0 : volume;
+      muteIcon.className = level === 0 ? 'fa-solid fa-volume-xmark' : (level < 50 ? 'fa-solid fa-volume-low' : 'fa-solid fa-volume-high');
+      muteBtn.setAttribute('aria-label', muted ? 'Activer le son' : 'Couper le son');
+      volumeSlider.value = level;
+      volumeSlider.setAttribute('aria-valuetext', 'Volume ' + level + ' pour cent');
+    }
+    function flushPending(){
+      const callbacks = pending.splice(0);
+      callbacks.forEach(function(cb){ cb(); });
+    }
+    window.onYouTubeIframeAPIReady = function(){
+      apiReady = true;
+      flushPending();
+    };
+    function whenApiReady(cb){
+      if(apiReady) cb(); else pending.push(cb);
+    }
+    function loadApi(){
+      if(window.YT && window.YT.Player){
+        apiReady = true;
+        flushPending();
+        return;
+      }
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      tag.async = true;
+      document.head.appendChild(tag);
+    }
+    function buildPlayer(){
+      player = new YT.Player(playerHost, {
+        videoId: videoId,
+        width:'100%',
+        height:'100%',
+        playerVars:{
+          autoplay: autoStart ? 1 : 0,
+          mute:1,
+          controls:0,
+          modestbranding:1,
+          rel:0,
+          playsinline:1,
+          loop:1,
+          playlist:videoId,
+          iv_load_policy:3,
+          fs:0
+        },
+        events:{
+          onReady: function(){
+            if(loading){ loading.classList.add('is-hidden'); }
+            try{ player.mute(); }catch(error){}
+            player.setVolume(volume);
+            muted = true;
+            setMuteUI();
+            if(autoStart){
+              player.playVideo();
+              setPlayUI(true);
+            }else{
+              player.pauseVideo();
+              setPlayUI(false);
+            }
+          },
+          onStateChange: function(event){
+            if(event.data === 1){ setPlayUI(true); }
+            else if(event.data === 2){ setPlayUI(false); }
+          }
+        }
+      });
+    }
+    function togglePlay(){
+      if(!player) return;
+      const state = player.getPlayerState();
+      if(state === 1){ player.pauseVideo(); }
+      else{ player.playVideo(); }
+    }
+    function toggleMute(){
+      if(!player) return;
+      muted = !muted;
+      if(muted){
+        player.mute();
+      }else{
+        if(volume === 0){ player.setVolume(100); volume = 100; }
+        player.unMute();
+      }
+      setMuteUI();
+    }
+    function setVolume(value){
+      if(!player) return;
+      volume = value;
+      if(volume > 0 && muted){ muted = false; player.unMute(); }
+      player.setVolume(volume);
+      if(volume === 0){ muted = true; player.mute(); }
+      setMuteUI();
+    }
+
+    if(playBtn) playBtn.addEventListener('click', togglePlay);
+    if(bigPlay) bigPlay.addEventListener('click', togglePlay);
+    if(muteBtn) muteBtn.addEventListener('click', toggleMute);
+    if(volumeSlider) volumeSlider.addEventListener('input', function(){ setVolume(parseInt(this.value, 10) || 0); });
+
+    if('IntersectionObserver' in window){
+      const observer = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting){
+            loadApi();
+            whenApiReady(buildPlayer);
+            observer.disconnect();
+          }
+        });
+      }, {rootMargin:'600px'});
+      observer.observe(shell);
+    }else{
+      loadApi();
+      whenApiReady(buildPlayer);
+    }
+  })();
+
   /* ---------- SERVICE DETAIL SMOOTH NAV ---------- */
   const sdnItems = document.querySelectorAll('.sdn-item');
   if(sdnItems.length){
@@ -301,11 +448,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const successMsg = document.getElementById('form-success');
       if(valid){
-        contactForm.reset();
-        if(successMsg){
-          successMsg.classList.add('show');
-          successMsg.scrollIntoView({behavior:'smooth', block:'center'});
-          setTimeout(function(){ successMsg.classList.remove('show'); }, 6000);
+        const submitBtn = contactForm.querySelector('[type="submit"]');
+        if(submitBtn){
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Envoi en cours…';
+        }
+        const endpoint = (contactForm.getAttribute('action') || '').replace('formsubmit.co/', 'formsubmit.co/ajax/');
+        if(endpoint && 'fetch' in window){
+          fetch(endpoint, {
+            method:'POST',
+            headers:{'Accept':'application/json'},
+            body:new FormData(contactForm)
+          })
+          .then(function(response){ return response.json(); })
+          .then(function(data){
+            if(data && (data.success === 'true' || data.success === true)){
+              contactForm.reset();
+              if(successMsg){
+                successMsg.classList.add('show');
+                successMsg.scrollIntoView({behavior:'smooth', block:'center'});
+                setTimeout(function(){ successMsg.classList.remove('show'); }, 6000);
+              }
+            }
+          })
+          .catch(function(){})
+          .finally(function(){
+            if(submitBtn){
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Envoyer ma demande';
+            }
+          });
+        }else{
+          contactForm.submit();
         }
       }
     });

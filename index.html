@@ -217,6 +217,32 @@
   </div>
 </section>
 
+<!-- ===================== SHOWREEL VIDÉO ===================== -->
+<section id="showreel" aria-labelledby="showreel-title">
+  <div class="glow-orb glow-blue" style="width:420px;height:420px;top:8%;left:-160px;"></div>
+  <div class="container">
+    <div class="section-tag center">BRAIN en images</div>
+    <h2 id="showreel-title" class="section-title center" data-aos="fade-up">Notre <span class="accent">showreel</span></h2>
+    <p class="section-sub center" data-aos="fade-up">Une immersion dans la créativité, la technologie et l'expertise audiovisuelle de BRAIN.</p>
+
+    <div class="video-player-shell" data-aos="fade-up" data-video-player data-video-id="6NziLBrldFo">
+      <div class="vp-loading" data-vp-loading aria-hidden="true"><span class="spinner" role="status" aria-label="Chargement de la vidéo"></span></div>
+      <div class="yt-player" id="player-showreel" role="region" aria-label="Lecteur vidéo BRAIN"></div>
+      <button class="vp-big-play" type="button" data-vp-big-play aria-label="Lancer la lecture">
+        <i class="fa-solid fa-play" aria-hidden="true"></i>
+      </button>
+      <div class="vp-controls">
+        <button class="vp-btn" type="button" data-vp-play aria-label="Lire"><i class="fa-solid fa-play" aria-hidden="true"></i></button>
+        <div class="vp-volume">
+          <button class="vp-btn" type="button" data-vp-mute aria-label="Couper le son"><i class="fa-solid fa-volume-high" aria-hidden="true"></i></button>
+          <input class="vp-volume-slider" type="range" min="0" max="100" value="100" data-vp-volume aria-label="Niveau de volume">
+        </div>
+        <span class="vp-badge"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Showreel BRAIN</span>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ===================== NOTRE APPROCHE ===================== -->
 <section id="approche">
   <div class="container">
@@ -451,10 +477,10 @@
         <span class="ct-label">WhatsApp</span>
         <span class="ct-value">Écrivez-nous</span>
       </a>
-      <a href="mailto:contact@braincobusiness.com" class="contact-tile">
+      <a href="mailto:braincobusiness@gmail.com" class="contact-tile">
         <i class="fa-solid fa-envelope"></i>
         <span class="ct-label">Email</span>
-        <span class="ct-value">contact@braincobusiness.com</span>
+        <span class="ct-value">braincobusiness@gmail.com</span>
       </a>
       <a href="services.html" class="contact-tile">
         <i class="fa-solid fa-globe"></i>
@@ -480,11 +506,10 @@
         <div class="footer-signature">Attirer • Convertir • Fidéliser</div>
         <p>Agence de communication digitale, audiovisuelle, créative et de transformation numérique basée à Abidjan, Côte d'Ivoire.</p>
         <div class="social-row">
-          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-          <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-          <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-          <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          <a href="https://www.facebook.com/Braincobusiness" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="https://www.tiktok.com/@businessbrainco" target="_blank" rel="noopener" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="https://www.linkedin.com/in/business-brain-co-7a06533a8/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="https://www.youtube.com/@businessbrainco" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
         </div>
       </div>
       <div class="footer-col">
@@ -528,6 +553,7 @@
 <a href="https://wa.me/2250711356324" id="whatsapp-float" target="_blank" aria-label="Contacter sur WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
 <button id="back-to-top" aria-label="Retour en haut"><i class="fa-solid fa-arrow-up"></i></button>
 
+<script src="js/supabase.js?v=1.0"></script>
 <script src="js/main.js?v=2.1"></script>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
