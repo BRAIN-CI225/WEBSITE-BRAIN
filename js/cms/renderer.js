@@ -156,11 +156,45 @@
             for (var ai = 0; ai < aosEls.length; ai++) aosEls[ai].classList.add('aos-animate');
           }
         } catch (e) {}
+
+        /* Compteurs animés (bloc statistiques) */
+        try { initCounters(container); } catch (e) {}
       } catch (err) {
         if (window.console) console.error('BRAINCMS renderer:', err);
       }
     })();
   });
+
+  /* ---------- Compteurs animés ---------- */
+  function initCounters(scope) {
+    var nums = scope.querySelectorAll('.cms-count');
+    if (!nums.length) return;
+    function run(el) {
+      var base = parseInt(el.getAttribute('data-base'), 10) || 0;
+      var suffix = el.getAttribute('data-suffix') || '';
+      var start = performance.now();
+      var duration = 1400;
+      var out = el;
+      function tick(now) {
+        var p = Math.min((now - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - p, 3);
+        out.textContent = Math.floor(eased * base) + suffix;
+        if (p < 1) { requestAnimationFrame(tick); }
+        else { out.textContent = base + suffix; }
+      }
+      requestAnimationFrame(tick);
+    }
+    if ('IntersectionObserver' in window) {
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) { run(entry.target); obs.unobserve(entry.target); }
+        });
+      }, { threshold: 0.3 });
+      nums.forEach(function (n) { obs.observe(n); });
+    } else {
+      nums.forEach(function (n) { run(n); });
+    }
+  }
 
   /* ---------- Mini slideshow héro (règles propres au rendu CMS) ---------- */
   function initHero(id, cfg) {

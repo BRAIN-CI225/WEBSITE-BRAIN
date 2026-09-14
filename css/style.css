@@ -2025,6 +2025,49 @@ select option{background:#0b1330;color:var(--brain-white);}
 }
 .cms-preview-bar a:hover{background:rgba(246,139,31,.32);}
 
+/* ============ CMS — REUSABLE SECTION SETTINGS ============ */
+/* Grille utilitaire responsive (CSS vars pilotées par le CMS) */
+.cms-grid{
+  display:grid;
+  grid-template-columns:repeat(var(--c-m, 1), 1fr);
+  --c-d:3; --c-t:2; --c-m:1;
+}
+@media(min-width:640px){ .cms-grid{ grid-template-columns:repeat(var(--c-t, 2), 1fr); } }
+@media(min-width:992px){ .cms-grid{ grid-template-columns:repeat(var(--c-d, 3), 1fr); } }
+
+/* Services : forcer les colonnes configurées (garde la carte "big") */
+.services-grid.cms-cols{ grid-template-columns:repeat(var(--c-m, 1), 1fr); }
+@media(min-width:640px){ .services-grid.cms-cols{ grid-template-columns:repeat(var(--c-t, 2), 1fr); } }
+@media(min-width:992px){ .services-grid.cms-cols{ grid-template-columns:repeat(var(--c-d, 3), 1fr); } }
+
+/* Image de fond de section + voile */
+.cms-bg-shade{position:absolute;inset:0;background:rgba(2,6,17,.78);z-index:0;pointer-events:none;}
+.cms-section > .container{position:relative;z-index:1;}
+.cms-section .glow-orb{z-index:1;}
+
+/* Largeurs de conteneur alternatives */
+.cms-container-full{max-width:100% !important;}
+.cms-container-narrow{max-width:760px !important;}
+
+/* Texte + Image : bouton CTA */
+.cms-ti-cta{margin-top:26px;}
+.cms-ti-body .cms-paragraph{margin-bottom:14px;}
+
+/* Blog : métadonnées article */
+.cms-post-meta{
+  display:flex;gap:14px;flex-wrap:wrap;align-items:center;
+  font-size:12.5px;color:var(--muted-color,#93a1b8);margin-top:12px;
+}
+.cms-post-meta time{display:inline-flex;align-items:center;gap:6px;}
+.cms-post-meta time::before{content:"\f073";font-family:"Font Awesome 6 Free";font-weight:600;font-size:11px;color:var(--brain-orange,#f68b1f);}
+.cms-post-meta span{display:inline-flex;align-items:center;gap:6px;}
+
+/* Compteurs : icône optionnelle */
+.counter-box .cb-icon{
+  font-size:26px;color:var(--brain-orange,#f68b1f);
+  margin-bottom:10px;display:flex;justify-content:center;
+}
+
 /* ============ REDUCED MOTION ============ */
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{

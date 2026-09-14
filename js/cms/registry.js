@@ -25,6 +25,84 @@
 
   function pad(n){ return String(n).padStart(2, '0'); }
 
+  /* Classe CSS personnalisée : uniquement des identifiants sûrs */
+  function validCssClass(value){
+    if (!value) return true;
+    return /^[A-Za-z0-9_-]+( [A-Za-z0-9_-]+)*$/.test(String(value));
+  }
+  function cssClasses(cfg){
+    var cls = cfg.custom_class;
+    return cls && validCssClass(cls) ? String(cls).trim() : '';
+  }
+
+  /* Colonnes responsive (bureau / tablette / mobile) */
+  function colsCfg(cfg, d, t, m){
+    return {
+      d: parseInt(cfg.columns_desktop, 10) || d,
+      t: parseInt(cfg.columns_tablet, 10) || t,
+      m: parseInt(cfg.columns_mobile, 10) || m
+    };
+  }
+  function gridStyle(cfg, d, t, m){
+    var cols = colsCfg(cfg, d, t, m);
+    return 'style="--c-d:' + cols.d + ';--c-t:' + cols.t + ';--c-m:' + cols.m + '"';
+  }
+
+  /* Dates courtes fr-FR pour les articles */
+  function fmtDate(iso){
+    if (!iso) return '';
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  /* ---------- Sanitisation HTML stricte (CUSTOM HTML) ---------- */
+  var SAFE_TAGS = /^(h[1-6]|p|strong|em|u|s|b|i|small|ul|ol|li|a|img|br|hr|blockquote|figure|figcaption|div|span|table|thead|tbody|tfoot|tr|th|td|iframe)$/i;
+  var SAFE_ATTRS = ['href','src','alt','title','width','height','cols','rows','span','colspan','rowspan','rel','target','cite','frameborder','allow','allowfullscreen','loading','controls','played'];
+  function sanitizeHtml(html){
+    html = String(html || '')
+      .replace(/<script[\s\S]*?<\/script>/gi, '')
+      .replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, '')
+      .replace(/javascript:/gi, '');
+    if (!document || !document.createElement) return html;
+    var box = document.createElement('div');
+    box.innerHTML = html;
+    if (!box.childNodes || !box.querySelectorAll) return html;
+    function clean(node){
+      if (node.nodeType !== 1) return node;
+      var el = node;
+      var tag = el.tagName ? el.tagName.toLowerCase() : '';
+      if (tag === 'script' || tag === 'style') { el.remove(); return null; }
+      if (!SAFE_TAGS.test(tag)) {
+        var txt = document.createTextNode(el.textContent || '');
+        el.replaceWith(txt);
+        return null;
+      }
+      [].slice.call(el.attributes).forEach(function (a) {
+        var n = a.name.toLowerCase();
+        if (n.indexOf('on') === 0) { el.removeAttribute(a.name); return; }
+        if (n.indexOf('data-') === 0) { el.removeAttribute(a.name); return; }
+        if (SAFE_ATTRS.indexOf(n) === -1) { el.removeAttribute(a.name); }
+      });
+      if (tag === 'a') {
+        var href = (el.getAttribute('href') || '').trim();
+        if (!href || /^(javascript:|vbscript:|data:)/i.test(href)) el.removeAttribute('href');
+      }
+      if (tag === 'img') {
+        var src = (el.getAttribute('src') || '').trim();
+        if (!src || /^(javascript:|data:)/i.test(src)) el.removeAttribute('src');
+      }
+      if (tag === 'iframe' && !embeddedAllowed(el.src || '')) { el.remove(); return null; }
+      [].slice.call(el.childNodes).forEach(function (c) {
+        var r = clean(c);
+        if (r === null && c === el) return;
+      });
+      return el;
+    }
+    [].slice.call(box.childNodes).forEach(function (n) { clean(n); });
+    return box.innerHTML;
+  }
+
   /* Sécurité : seuls ces hôtes sont autorisés pour un EMBED */
   var EMBED_ALLOWLIST = [
     'youtube.com','youtube-nocookie.com','youtu.be','player.vimeo.com',
@@ -49,16 +127,26 @@
     imageAlt:   { name: 'image_alt',  label: 'Texte alternatif', type: 'text' },
     background: { name: 'background', label: 'Fond / halo',      type: 'select',
                   options: [['none','Aucun'],['blue-orb','Halo bleu'],['orange-orb','Halo orange'],['orange-blue-orbs','Halo orange + bleu']] },
+    backgroundImage:{ name: 'background_image', label: 'Image de fond', type: 'image',
+                  help: 'Image pleine largeur derrière la section (assombrie automatiquement)' },
     tag:        { name: 'tag',        label: 'Étiquette',        type: 'text',      placeholder: 'ex : Nos expertises' },
     align:      { name: 'align',      label: 'Alignement',       type: 'select',
                   options: [['center','Centré'],['left','Gauche']] },
     animation:  { name: 'animation',  label: 'Animation (AOS)',  type: 'select',
                   options: [['fade-up','Fade up'],['fade-left','Fade gauche'],['fade-right','Fade droite'],['zoom-in','Zoom in'],['none','Aucune']] },
     paddingTop: { name: 'padding_top', label: 'Espace haut (px)', type: 'number', default: 90 },
-    paddingBottom:{ name: 'padding_bottom', label: 'Espace bas (px)', type: 'number', default: 90 }
+    paddingBottom:{ name: 'padding_bottom', label: 'Espace bas (px)', type: 'number', default: 90 },
+    marginTop:  { name: 'margin_top',  label: 'Marge haut (px)',  type: 'number', default: 0 },
+    marginBottom:{ name: 'margin_bottom', label: 'Marge bas (px)', type: 'number', default: 0 },
+    radius:     { name: 'radius',      label: 'Rayon des coins (px)', type: 'number', default: 0 },
+    containerWidth:{ name: 'container_width', label: 'Largeur du conteneur', type: 'select',
+                  options: [['normal','Normale'],['full','Pleine largeur'],['narrow','Étroite (760px)']] },
+    customClass:{ name: 'custom_class', label: 'Classe CSS (sécurisée)', type: 'text',
+                  placeholder: 'classes séparées par des espaces (a-z, chiffres, - _)' }
   };
 
-  var BASE_FIELDS = [F.tag, F.title, F.subtitle, F.content, F.align, F.background, F.animation, F.paddingTop, F.paddingBottom];
+  var COMMON_SETTINGS = [F.backgroundImage, F.marginTop, F.marginBottom, F.radius, F.containerWidth, F.customClass];
+  var BASE_FIELDS = [F.tag, F.title, F.subtitle, F.content, F.align].concat(COMMON_SETTINGS).concat([F.background, F.animation, F.paddingTop, F.paddingBottom]);
   var HERO_FIELDS = [F.background];
   var SPACER_FIELDS = [];
 
@@ -149,6 +237,8 @@
       { name: 'columns_desktop', label: 'Colonnes (bureau)', type: 'number', default: 3 },
       { name: 'columns_tablet', label: 'Colonnes (tablette)', type: 'number', default: 2 },
       { name: 'columns_mobile', label: 'Colonnes (mobile)', type: 'number', default: 1 },
+      { name: 'order_by', label: 'Tri', type: 'select',
+        options: [['display_order','Ordre défini'],['title_asc','Alphabétique A→Z'],['title_desc','Alphabétique Z→A']] },
       { name: 'show_image', label: 'Afficher l\'image', type: 'checkbox', default: true },
       { name: 'show_icon', label: 'Afficher l\'icône', type: 'checkbox', default: true },
       { name: 'show_description', label: 'Afficher la description', type: 'checkbox', default: true },
@@ -162,12 +252,15 @@
     },
     render: function (s, ctx) {
       var cfg = s.configuration || {};
-      var services = (ctx && ctx.refs && ctx.refs.services) || [];
+      var services = (ctx && ctx.refs && ctx.refs.services || []).slice();
+      var order = cfg.order_by || 'display_order';
+      if (order === 'title_asc') services.sort(function (a, b) { return String(a.title).localeCompare(String(b.title)); });
+      else if (order === 'title_desc') services.sort(function (a, b) { return String(b.title).localeCompare(String(a.title)); });
       var limit = parseInt(cfg.limit, 10) || services.length || 3;
       var list = services.slice(0, limit);
-      var cols = parseInt(cfg.columns_desktop, 10) || 3;
+      var cols = colsCfg(cfg, 3, 2, 1);
       var cards = list.map(function (sv, i) {
-        var cls = 'service-card' + (i === 0 && list.length % cols === 1 ? ' big' : '');
+        var cls = 'service-card' + (i === 0 && cols.d > 1 && list.length % cols.d === 1 ? ' big' : '');
         return '<a href="' + escAttr(sv.url || 'services.html') + '" class="' + cls + '">' +
           (cfg.show_image && sv.image ? '<img src="' + escAttr(sv.image) + '" alt="' + escAttr(sv.title) + '" loading="lazy">' : '') +
           (cfg.show_icon !== false && sv.icon ? '<span class="sc-icon"><i class="fa-solid ' + escAttr(sv.icon) + '"></i></span>' : '') +
@@ -179,7 +272,7 @@
             (cfg.show_cta ? '<span class="sc-link">Découvrir le service <i class="fa-solid fa-arrow-right"></i></span>' : '') +
           '</div></a>';
       }).join('');
-      return ctx.sectionWrap(s, ctx, cards, 'services');
+      return ctx.sectionWrap(s, ctx, '<div class="services-grid cms-cols" ' + gridStyle(cfg, 3, 2, 1) + '>' + cards + '</div>', 'services');
     }
   });
 
@@ -191,7 +284,10 @@
     description: 'Grille de projets issus de la base de données.',
     fields: BASE_FIELDS.concat([
       { name: 'limit', label: 'Nombre de projets', type: 'number', default: 3 },
-      { name: 'columns', label: 'Colonnes', type: 'number', default: 3 },
+      { name: 'columns_desktop', label: 'Colonnes (bureau)', type: 'number', default: 3 },
+      { name: 'columns_tablet', label: 'Colonnes (tablette)', type: 'number', default: 2 },
+      { name: 'columns_mobile', label: 'Colonnes (mobile)', type: 'number', default: 1 },
+      { name: 'category', label: 'Filtrer par catégorie', type: 'text', placeholder: 'ex : branding — laisser vide pour tout afficher' },
       { name: 'show_category', label: 'Afficher la catégorie', type: 'checkbox', default: true },
       { name: 'show_description', label: 'Afficher la description', type: 'checkbox', default: true },
       { name: 'show_cta', label: 'Afficher « Voir tout le portfolio »', type: 'checkbox', default: true },
@@ -203,7 +299,11 @@
     },
     render: function (s, ctx) {
       var cfg = s.configuration || {};
-      var projects = (ctx && ctx.refs && ctx.refs.projects) || [];
+      var projects = (ctx && ctx.refs && ctx.refs.projects || []).slice();
+      if (cfg.category) {
+        var cat = String(cfg.category).toLowerCase();
+        projects = projects.filter(function (p) { return (p.category || '').toLowerCase().indexOf(cat) !== -1; });
+      }
       var list = projects.slice(0, parseInt(cfg.limit, 10) || projects.length || 3);
       var items = list.map(function (p) {
         return '<div class="portfolio-item">' +
@@ -219,7 +319,7 @@
       if (cfg.show_cta !== false) {
         tail = '<div class="center" style="margin-top:50px;"><a href="portfolio.html" class="btn btn-outline">' + esc(cfg.cta_text || 'Voir tout le portfolio') + '</a></div>';
       }
-      return ctx.sectionWrap(s, ctx, '<div class="portfolio-grid">' + items + '</div>' + tail, 'portfolio');
+      return ctx.sectionWrap(s, ctx, '<div class="portfolio-grid cms-grid" ' + gridStyle(cfg, 3, 2, 1) + '>' + items + '</div>' + tail, 'portfolio');
     }
   });
 
@@ -231,9 +331,14 @@
     description: 'Derniers articles publiés.',
     fields: BASE_FIELDS.concat([
       { name: 'limit', label: 'Nombre d\'articles', type: 'number', default: 3 },
-      { name: 'columns', label: 'Colonnes', type: 'number', default: 3 },
+      { name: 'columns_desktop', label: 'Colonnes (bureau)', type: 'number', default: 3 },
+      { name: 'columns_tablet', label: 'Colonnes (tablette)', type: 'number', default: 2 },
+      { name: 'columns_mobile', label: 'Colonnes (mobile)', type: 'number', default: 1 },
+      { name: 'category', label: 'Filtrer par catégorie', type: 'text', placeholder: 'laisser vide pour tout afficher' },
+      { name: 'featured_only', label: 'Uniquement les articles mis en avant', type: 'checkbox', default: false },
       { name: 'show_excerpt', label: 'Afficher le résumé', type: 'checkbox', default: true },
-      { name: 'category', label: 'Filtrer par catégorie', type: 'text', placeholder: 'laisser vide pour tout afficher' }
+      { name: 'show_date', label: 'Afficher la date', type: 'checkbox', default: true },
+      { name: 'show_author', label: 'Afficher l\'auteur', type: 'checkbox', default: true }
     ]),
     validate: function (cfg) {
       var n = parseInt(cfg.limit, 10) || 0;
@@ -241,20 +346,28 @@
     },
     render: function (s, ctx) {
       var cfg = s.configuration || {};
-      var posts = (ctx && ctx.refs && ctx.refs.blog) || [];
+      var posts = (ctx && ctx.refs && ctx.refs.blog || []).slice();
+      if (cfg.featured_only) posts = posts.filter(function (p) { return p.is_featured === true; });
       if (cfg.category) posts = posts.filter(function (p) { return (p.category || '').toLowerCase() === String(cfg.category).toLowerCase(); });
       var list = posts.slice(0, parseInt(cfg.limit, 10) || 3);
       var items = list.map(function (p) {
+        var meta = '';
+        if (cfg.show_date !== false || cfg.show_author !== false) {
+          var bits = [];
+          if (cfg.show_date !== false && p.published_at) bits.push('<time datetime="' + escAttr(p.published_at) + '">' + fmtDate(p.published_at) + '</time>');
+          if (cfg.show_author !== false && p.author) bits.push('<span><i class="fa-solid fa-user"></i> ' + esc(p.author) + '</span>');
+          meta = '<div class="cms-post-meta">' + bits.join('') + '</div>';
+        }
         return '<article class="cms-post">' +
           (p.image ? '<a href="' + escAttr(p.url || '#') + '" class="cms-post-img"><img src="' + escAttr(p.image) + '" alt="' + escAttr(p.title) + '" loading="lazy"></a>' : '') +
           '<div class="cms-post-body">' +
             (p.category ? '<span class="cms-post-cat">' + esc(p.category) + '</span>' : '') +
             '<h3 class="cms-post-title"><a href="' + escAttr(p.url || '#') + '">' + esc(p.title) + '</a></h3>' +
             (cfg.show_excerpt && p.excerpt ? '<p class="cms-post-excerpt">' + esc(p.excerpt) + '</p>' : '') +
-            (p.author ? '<span class="cms-post-author"><i class="fa-solid fa-user"></i> ' + esc(p.author) + '</span>' : '') +
+            meta +
           '</div></article>';
       }).join('');
-      var html = '<div class="cms-post-grid" style="grid-template-columns:repeat(' + (parseInt(cfg.columns, 10) || 3) + ',1fr)">' + items + '</div>';
+      var html = '<div class="cms-post-grid cms-grid" ' + gridStyle(cfg, 3, 2, 1) + '>' + items + '</div>';
       return ctx.sectionWrap(s, ctx, html, 'blog');
     }
   });
@@ -267,7 +380,9 @@
     description: 'Avis clients issus de la base de données.',
     fields: BASE_FIELDS.concat([
       { name: 'limit', label: 'Nombre de témoignages', type: 'number', default: 3 },
-      { name: 'column_count', label: 'Colonnes', type: 'number', default: 3 },
+      { name: 'columns_desktop', label: 'Colonnes (bureau)', type: 'number', default: 3 },
+      { name: 'columns_tablet', label: 'Colonnes (tablette)', type: 'number', default: 2 },
+      { name: 'columns_mobile', label: 'Colonnes (mobile)', type: 'number', default: 1 },
       { name: 'show_rating', label: 'Afficher les étoiles', type: 'checkbox', default: true }
     ]),
     validate: function (cfg) {
@@ -293,7 +408,7 @@
             '<div><div class="t-name">' + esc(t.client_name) + '</div><div class="t-role">' + esc(t.company || t.position || '') + '</div></div>' +
           '</div></div>';
       }).join('');
-      var html = '<div class="testi-grid" style="grid-template-columns:repeat(' + (parseInt(cfg.column_count, 10) || 3) + ',1fr)">' + items + '</div>';
+      var html = '<div class="testi-grid cms-grid" ' + gridStyle(cfg, 3, 2, 1) + '>' + items + '</div>';
       return ctx.sectionWrap(s, ctx, html, 'testimonials');
     }
   });
@@ -306,7 +421,9 @@
     description: 'Chiffres clés (compteurs) issus de la base de données.',
     fields: BASE_FIELDS.concat([
       { name: 'limit', label: 'Nombre de chiffres', type: 'number', default: 4 },
-      { name: 'columns', label: 'Colonnes', type: 'number', default: 4 }
+      { name: 'columns_desktop', label: 'Colonnes (bureau)', type: 'number', default: 4 },
+      { name: 'columns_tablet', label: 'Colonnes (tablette)', type: 'number', default: 2 },
+      { name: 'columns_mobile', label: 'Colonnes (mobile)', type: 'number', default: 2 }
     ]),
     validate: function (cfg) {
       var n = parseInt(cfg.limit, 10) || 0;
@@ -317,12 +434,18 @@
       var stats = (ctx && ctx.refs && ctx.refs.statistics) || [];
       var list = stats.slice(0, parseInt(cfg.limit, 10) || 4);
       var items = list.map(function (st) {
+        var cap = esc(st.number);
+        var m = String(st.number || '').trim().match(/^(\d+)(.*)$/);
+        var numEl = m
+          ? '<div class="cb-num"><span class="cms-count" data-base="' + escAttr(m[1]) + '" data-suffix="' + escAttr(m[2]) + '">' + m[1] + esc(m[2]) + '</span></div>'
+          : '<div class="cb-num">' + cap + '</div>';
         return '<div class="counter-box">' +
-          '<div class="cb-num">' + esc(st.number) + '</div>' +
+          (st.icon ? '<div class="cb-icon"><i class="fa-solid ' + escAttr(st.icon) + '"></i></div>' : '') +
+          numEl +
           '<div class="cb-label">' + esc(st.label) + '</div>' +
         '</div>';
       }).join('');
-      var html = '<div class="counters-row" style="grid-template-columns:repeat(' + (parseInt(cfg.columns, 10) || 4) + ',1fr)">' + items + '</div>';
+      var html = '<div class="counters-row cms-grid" ' + gridStyle(cfg, 4, 2, 2) + '>' + items + '</div>';
       return ctx.sectionWrap(s, ctx, html, 'statistics');
     }
   });
@@ -405,7 +528,9 @@
           { name: 'src', label: 'Image', type: 'image' },
           { name: 'alt', label: 'Légende', type: 'text' }
         ] },
-      { name: 'columns', label: 'Colonnes', type: 'number', default: 3 },
+      { name: 'columns_desktop', label: 'Colonnes (bureau)', type: 'number', default: 3 },
+      { name: 'columns_tablet', label: 'Colonnes (tablette)', type: 'number', default: 2 },
+      { name: 'columns_mobile', label: 'Colonnes (mobile)', type: 'number', default: 1 },
       { name: 'gap', label: 'Écart entre images (px)', type: 'number', default: 16 }
     ]),
     validate: function (cfg) {
@@ -420,7 +545,7 @@
           '<img src="' + escAttr(im.src) + '" alt="' + escAttr(im.alt || '') + '" loading="lazy"></a>';
       }).join('');
       var gap = parseInt(cfg.gap, 10) || 16;
-      var html = '<div class="cms-gallery" style="grid-template-columns:repeat(' + (parseInt(cfg.columns, 10) || 3) + ',1fr);gap:' + gap + 'px">' + imgs + '</div>';
+      var html = '<div class="cms-gallery cms-grid" ' + gridStyle(cfg, 3, 2, 1) + ' style="gap:' + gap + 'px">' + imgs + '</div>';
       return ctx.sectionWrap(s, ctx, html, 'gallery');
     }
   });
@@ -498,7 +623,9 @@
           { name: 'title', label: 'Titre', type: 'text' },
           { name: 'text', label: 'Description', type: 'textarea' }
         ] },
-      { name: 'columns', label: 'Colonnes', type: 'number', default: 4 }
+      { name: 'columns_desktop', label: 'Colonnes (bureau)', type: 'number', default: 4 },
+      { name: 'columns_tablet', label: 'Colonnes (tablette)', type: 'number', default: 2 },
+      { name: 'columns_mobile', label: 'Colonnes (mobile)', type: 'number', default: 1 }
     ]),
     validate: function (cfg) {
       if (!Array.isArray(cfg.items) || !cfg.items.length) return ['Ajoutez au moins un atout.'];
@@ -513,8 +640,7 @@
           '<h3>' + esc(it.title) + '</h3>' +
           '<p>' + esc(it.text) + '</p></div>';
       }).join('');
-      var cols = parseInt(cfg.columns, 10) || 4;
-      var html = '<div class="why-grid" style="grid-template-columns:repeat(' + cols + ',1fr)">' + items + '</div>';
+      var html = '<div class="why-grid cms-grid" ' + gridStyle(cfg, 4, 2, 1) + '>' + items + '</div>';
       return ctx.sectionWrap(s, ctx, html, 'features');
     }
   });
@@ -528,6 +654,9 @@
     fields: BASE_FIELDS.concat([
       { name: 'cta_text', label: 'Texte du bouton', type: 'text', default: 'Demander un devis' },
       { name: 'cta_url', label: 'Lien du bouton', type: 'text', default: 'contact.html' },
+      { name: 'columns_desktop', label: 'Colonnes (bureau)', type: 'number', default: 4 },
+      { name: 'columns_tablet', label: 'Colonnes (tablette)', type: 'number', default: 2 },
+      { name: 'columns_mobile', label: 'Colonnes (mobile)', type: 'number', default: 1 },
       { name: 'plans', label: 'Formules', type: 'repeater',
         fields: [
           { name: 'name', label: 'Nom', type: 'text' },
@@ -553,7 +682,7 @@
           '<ul>' + lis + '</ul>' +
           '<a href="' + escAttr(cfg.cta_url || 'contact.html') + '" class="' + btn + '">' + esc(cfg.cta_text || 'Demander un devis') + '</a></div>';
       }).join('');
-      var html = '<div class="pricing-grid">' + cards + '</div>';
+      var html = '<div class="pricing-grid cms-grid" ' + gridStyle(cfg, 4, 2, 1) + '>' + cards + '</div>';
       return ctx.sectionWrap(s, ctx, html, 'pricing');
     }
   });
@@ -593,7 +722,8 @@
     description: 'Paragraphes, liste à puces ou timeline en 5 étapes.',
     fields: BASE_FIELDS.concat([
       { name: 'layout', label: 'Disposition', type: 'select',
-        options: [['paragraphs','Paragraphes'],['list','Liste à puces'],['timeline','Timeline étapes'],['cards','Cartes (Titre | Texte)']] }
+        options: [['paragraphs','Paragraphes'],['list','Liste à puces'],['timeline','Timeline étapes'],['cards','Cartes (Titre | Texte)']] },
+      { name: 'max_width', label: 'Largeur maximale (px)', type: 'number', default: 0 }
     ]),
     validate: function (cfg) {
       return (!s.content || !String(s.content).trim()) ? ['Un contenu texte est requis.'] : [];
@@ -627,6 +757,8 @@
         html = raw.split('\n').filter(function (l) { return l.trim(); })
           .map(function (l) { return '<p class="cms-paragraph">' + esc(l) + '</p>'; }).join('');
       }
+      var maxW = parseInt(cfg.max_width, 10) || 0;
+      if (maxW > 0) html = '<div class="cms-text-content" style="max-width:' + maxW + 'px;margin-left:auto;margin-right:auto">' + html + '</div>';
       return ctx.sectionWrap(s, ctx, html, 'text');
     }
   });
@@ -640,11 +772,12 @@
     fields: [
       F.title, F.subtitle, F.image, F.imageAlt,
       { name: 'content', label: 'Contenu texte', type: 'textarea' },
+      { name: 'cta_text', label: 'Texte du bouton', type: 'text' },
+      { name: 'cta_url', label: 'Lien du bouton', type: 'text' },
       { name: 'image_position', label: 'Position de l\'image', type: 'select', options: [['right','À droite'],['left','À gauche']] },
       { name: 'image_ratio', label: 'Format d\'image', type: 'select', options: [['auto','Original'],['16/9','16/9'],['4/3','4/3'],['1/1','Carré']] },
-      F.background,
-      F.animation, F.paddingTop, F.paddingBottom
-    ],
+      { name: 'max_width', label: 'Largeur max du texte (px)', type: 'number', default: 0 }
+    ].concat(COMMON_SETTINGS).concat([F.background, F.animation, F.paddingTop, F.paddingBottom]),
     validate: function (cfg) {
       return (!s.image) ? ['Une image est requise.'] : [];
     },
@@ -654,9 +787,15 @@
       var ratio = cfg.image_ratio && cfg.image_ratio !== 'auto' ? ' style="aspect-ratio:' + escAttr(cfg.image_ratio) + '"' : '';
       var body = (s.content || '').split('\n').filter(function (l) { return l.trim(); })
         .map(function (l) { return '<p class="cms-paragraph">' + esc(l) + '</p>'; }).join('');
+      var cta = '';
+      if (cfg.cta_text && cfg.cta_url) {
+        cta = '<div class="cms-ti-cta"><a class="btn btn-primary" href="' + escAttr(cfg.cta_url) + '">' + esc(cfg.cta_text) + ' <i class="fa-solid fa-arrow-right"></i></a></div>';
+      }
+      var maxW = parseInt(cfg.max_width, 10) || 0;
+      var bodyStyle = maxW > 0 ? ' style="max-width:' + maxW + 'px"' : '';
       var html = '<div class="cms-text-image ' + pos + '">' +
         '<div class="cms-ti-media"><img src="' + escAttr(s.image) + '" alt="' + escAttr((cfg && cfg.image_alt) || s.image_alt || '') + '" loading="lazy"' + ratio + '></div>' +
-        '<div class="cms-ti-body">' + body + '</div></div>';
+        '<div class="cms-ti-body"' + bodyStyle + '>' + body + cta + '</div></div>';
       return ctx.sectionWrap(s, ctx, html, 'text_image');
     }
   });
@@ -675,23 +814,11 @@
       var html = cfg.html || '';
       if (!html.trim()) return ['Le contenu HTML est vide.'];
       if (/<script|javascript:|on\w+=/i.test(html)) return ['Le contenu HTML contient du code interdit.'];
-      var whitelist = /^<\/?(h[1-6]|p|strong|em|ul|ol|li|a|img|br|blockquote|div|span|table|thead|tbody|tr|th|td|iframe)(\s[^>]*)?\/?>/i;
-      var safe = html.replace(/<img[^>]*>/gi, ''); // déjà contrôlé
-      return []; 
+      return [];
     },
     render: function (s, ctx) {
       var cfg = s.configuration || {};
-      var html = String(cfg.html || '');
-      /* Nettoyage strict : suppression des scripts/événements */
-      html = html.replace(/<script[\s\S]*?<\/script>/gi, '')
-                 .replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, '')
-                 .replace(/javascript:/gi, '');
-      var wrapper = document.createElement('div');
-      wrapper.innerHTML = html;
-      wrapper.querySelectorAll('iframe').forEach(function (f) {
-        if (!embeddedAllowed(f.src || '')) f.remove();
-      });
-      return ctx.sectionWrap(s, ctx, wrapper.innerHTML, 'custom_html');
+      return ctx.sectionWrap(s, ctx, sanitizeHtml(cfg.html), 'custom_html');
     }
   });
 
@@ -748,6 +875,9 @@
     escAttr: escAttr,
     pad: pad,
     embeddedAllowed: embeddedAllowed,
+    sanitizeHtml: sanitizeHtml,
+    validCssClass: validCssClass,
+    gridStyle: gridStyle,
     BLOCK_TYPES: BLOCK_TYPES,
     baseFields: BASE_FIELDS.slice(),
     getType: function (type) {
@@ -772,8 +902,19 @@
       }
       var padT = parseInt(cfg.padding_top, 10); if (isNaN(padT)) padT = 90;
       var padB = parseInt(cfg.padding_bottom, 10); if (isNaN(padB)) padB = 90;
+      var marT = parseInt(cfg.margin_top, 10); if (isNaN(marT)) marT = 0;
+      var marB = parseInt(cfg.margin_bottom, 10); if (isNaN(marB)) marB = 0;
+      var radius = parseInt(cfg.radius, 10); if (isNaN(radius)) radius = 0;
       var aos = cfg.animation && cfg.animation !== 'none' ? ' data-aos="' + escAttr(cfg.animation) + '"' : '';
       var head = '';
+      var style = 'padding-top:' + padT + 'px;padding-bottom:' + padB + 'px;margin-top:' + marT + 'px;margin-bottom:' + marB + 'px';
+      if (radius > 0) style += ';border-radius:' + radius + 'px;overflow:hidden';
+      var bgImg = cfg.background_image || s.background_image || '';
+      if (bgImg) style += ';background-image:url("' + escAttr(bgImg) + '");background-size:cover;background-position:center';
+      var custom = cssClasses(cfg);
+      var containerClass = 'container';
+      if (cfg.container_width === 'full') containerClass += ' cms-container-full';
+      else if (cfg.container_width === 'narrow') containerClass += ' cms-container-narrow';
       if (cfg.tag || s.title || s.subtitle) {
         head += '<div class="section-tag' + (alignClass === 'center' ? ' center' : '') + '">' + esc(cfg.tag || '') + '</div>';
         if (s.title) {
@@ -782,9 +923,10 @@
         }
         if (s.subtitle) head += '<p class="section-sub' + (alignClass === 'center' ? ' center' : '') + '"' + aos + '>' + scape(s.subtitle) + '</p>';
       }
-      return '<section class="cms-section cms-' + escAttr(type) + '" data-cms-type="' + escAttr(type) + '" data-cms-id="' + escAttr(s.id) + '" style="padding-top:' + padT + 'px;padding-bottom:' + padB + 'px">' +
+      return '<section class="cms-section cms-' + escAttr(type) + (custom ? ' ' + escAttr(custom) : '') + '" data-cms-type="' + escAttr(type) + '" data-cms-id="' + escAttr(s.id) + '" style="' + style + '">' +
+        (bgImg ? '<span class="cms-bg-shade" aria-hidden="true"></span>' : '') +
         orbs +
-        '<div class="container">' + head + inner + '</div>' +
+        '<div class="' + containerClass + '">' + head + inner + '</div>' +
         '</section>';
     },
     /* Fabrique le contexte de rendu (références + helpers) */
