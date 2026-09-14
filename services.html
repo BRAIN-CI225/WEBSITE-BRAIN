@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
 <link rel="stylesheet" href="css/style.css?v=2.3">
 </head>
-<body>
+<body data-page="services">
 
 <header id="site-header">
   <div class="container">
@@ -47,6 +47,8 @@
   <a href="contact.html" class="btn btn-primary btn-block">Demander un devis</a>
 </nav>
 
+<div class="cms-render-area" data-cms-page="services"></div>
+<div class="cms-static">
 <section class="page-hero">
   <div class="container">
     <div class="page-eyebrow" data-aos="fade-up">Nos services</div>
@@ -145,6 +147,7 @@
     </div>
   </div>
 </section>
+</div><!-- /.cms-static -->
 
 <footer>
   <div class="container">
@@ -203,6 +206,8 @@
 <a href="https://wa.me/2250711356324" id="whatsapp-float" target="_blank" aria-label="Contacter sur WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
 <button id="back-to-top" aria-label="Retour en haut"><i class="fa-solid fa-arrow-up"></i></button>
 <script src="js/supabase.js?v=1.0"></script>
+<script src="js/cms/registry.js?v=1.0"></script>
+<script src="js/cms/renderer.js?v=1.0"></script>
 <script src="js/main.js?v=2.1"></script>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>

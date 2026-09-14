@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRAIN CMS — Administration</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="ad-app">
+
+<header class="ad-topbar" id="ad-topbar" hidden>
+  <button class="ad-burger" id="ad-burger" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+  <a class="ad-brand" href="#/pages">
+    <span class="ad-brand-ic"><i class="fa-solid fa-layer-group"></i></span>
+    <span>BRAIN <em>CMS</em></span>
+  </a>
+  <nav class="ad-nav" id="ad-nav">
+    <a href="#/pages" data-nav="pages"><i class="fa-solid fa-file-lines"></i> Pages</a>
+    <a href="#/media" data-nav="media"><i class="fa-solid fa-images"></i> Médias</a>
+    <a href="#/settings" data-nav="settings"><i class="fa-solid fa-sliders"></i> Réglages</a>
+    <a href="#/logs" data-nav="logs"><i class="fa-solid fa-clock-rotate-left"></i> Activité</a>
+    <a href="../index.html" target="_blank" class="ad-nav-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Voir le site</a>
+  </nav>
+  <div class="ad-top-user" id="ad-top-user">
+    <span id="ad-user-name"></span>
+    <button class="ad-btn ad-btn-ghost" id="ad-logout" title="Se déconnecter"><i class="fa-solid fa-right-from-bracket"></i> Quitter</button>
+  </div>
+</header>
+
+<main class="ad-main" id="ad-main"></main>
+
+<div class="ad-toast" id="ad-toast" hidden></div>
+
+<script src="../js/supabase.js?v=1.0"></script>
+<script src="../js/cms/registry.js?v=1.0"></script>
+<script src="js/admin.js?v=1.0"></script>
+</body>
+</html>

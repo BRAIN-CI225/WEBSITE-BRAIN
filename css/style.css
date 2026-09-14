@@ -1870,6 +1870,161 @@ select option{background:#0b1330;color:var(--brain-white);}
   .page-eyebrow{font-size:.6rem;}
 }
 
+/* ============ CMS: styles rendu dynamique ============ */
+.cms-section{position:relative;}
+.cms-static .hero-progress span{transition:none;}
+
+/* ---------- Hero rendu par le CMS ---------- */
+.cms-hero{
+  position:relative;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  background:var(--brain-bg);
+  overflow:hidden;
+  padding:0;
+}
+.cms-hero::before{
+  content:'';
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px);
+  background-size:52px 52px;
+  -webkit-mask-image:radial-gradient(circle at 50% 30%, black 0%, transparent 72%);
+  mask-image:radial-gradient(circle at 50% 30%, black 0%, transparent 72%);
+  z-index:2;
+  pointer-events:none;
+}
+.cms-hero .hero-dots{gap:10px;} /* util */
+.cms-hero .hero-slide{transform:none;}
+.cms-hero .hero-progress span{width:0;}
+.cms-hero .hero-progress span.is-running{animation:cmsHeroProgress 6s linear forwards;}
+@keyframes cmsHeroProgress{
+  from{width:0}
+  to{width:100%}
+}
+
+/* ---------- FAQ (accordéon) ---------- */
+.cms-faq{display:flex;flex-direction:column;gap:12px;max-width:780px;margin:0 auto;}
+.cms-faq-item{
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
+  overflow:hidden;
+}
+.cms-faq-item summary{
+  cursor:pointer;
+  display:flex;align-items:center;gap:12px;
+  padding:16px 20px;
+  font-weight:600;
+  list-style:none;
+}
+.cms-faq-item summary::-webkit-details-marker{display:none;}
+.cms-faq-item summary i:first-child{color:var(--brain-orange);flex:none;}
+.cms-faq-item summary .cms-faq-icon{margin-left:auto;transition:transform .2s;color:var(--brain-muted);font-size:.82em;}
+.cms-faq-item[open] summary .cms-faq-icon{transform:rotate(180deg);}
+.cms-faq-item[open] summary{border-bottom:1px solid rgba(255,255,255,.06);}
+.cms-faq-item p{margin:0;padding:16px 20px;color:var(--brain-soft);font-size:.92rem;line-height:1.7;}
+
+/* ---------- Vidéo ---------- */
+.cms-video-wrap{
+  position:relative;
+  width:100%;
+  max-width:860px;
+  margin:0 auto;
+  border-radius:16px;
+  overflow:hidden;
+  aspect-ratio:16/9;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 14px 40px rgba(0,0,0,.45);
+}
+.cms-video-frame{width:100%;height:100%;display:block;}
+
+/* ---------- Texte + Image ---------- */
+.cms-text-image{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:40px;
+  align-items:center;
+}
+.cms-ti-left{direction:ltr;}
+.cms-ti-left .cms-ti-media{order:1;}
+.cms-ti-left .cms-ti-body{order:2;}
+.cms-ti-right .cms-ti-media{order:2;}
+.cms-ti-right .cms-ti-body{order:1;}
+.cms-ti-media{border-radius:14px;overflow:hidden;}
+.cms-ti-media img{width:100%;height:auto;display:block;object-fit:cover;}
+.cms-ti-title{margin:0 0 12px;font-size:1.6rem;}
+.cms-ti-sub{color:var(--brain-soft);margin:0 0 18px;font-size:.95rem;}
+.cms-paragraph{color:var(--brain-soft);margin:0 0 10px;line-height:1.75;}
+.cms-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;}
+.cms-list li{display:flex;gap:10px;align-items:flex-start;color:var(--brain-soft);}
+.cms-list li i{color:var(--brain-orange);margin-top:4px;}
+
+/* ---------- Galerie ---------- */
+.cms-gallery{display:grid;}
+.cms-gallery-item{display:block;border-radius:10px;overflow:hidden;aspect-ratio:4/3;}
+.cms-gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform .3s ease;}
+.cms-gallery-item:hover img{transform:scale(1.05);}
+
+/* ---------- Blog ---------- */
+.cms-post-grid{display:grid;gap:22px;}
+.cms-post{
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  overflow:hidden;
+  transition:transform .2s,box-shadow .2s;
+}
+.cms-post:hover{transform:translateY(-6px);box-shadow:0 14px 34px rgba(0,0,0,.35);}
+.cms-post-img{display:block;aspect-ratio:16/9;overflow:hidden;}
+.cms-post-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s;}
+.cms-post:hover .cms-post-img img{transform:scale(1.05);}
+.cms-post-body{padding:18px 20px;}
+.cms-post-cat{
+  display:inline-block;
+  padding:3px 10px;border-radius:999px;
+  font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;
+  background:rgba(246,139,31,.12);color:var(--brain-orange-light);
+  margin-bottom:8px;
+}
+.cms-post-title{margin:0 0 8px;font-size:1.08rem;}
+.cms-post-title a{color:var(--brain-text);}
+.cms-post-title a:hover{color:var(--brain-orange-light);}
+.cms-post-excerpt{color:var(--brain-soft);font-size:.88rem;margin:0 0 12px;line-height:1.65;}
+.cms-post-author{font-size:.78rem;color:var(--brain-muted);}
+.cms-post-author i{margin-right:4px;}
+
+/* ---------- Embed ---------- */
+.cms-embed{position:relative;width:100%;max-width:860px;margin:0 auto;border-radius:14px;overflow:hidden;aspect-ratio:16/9;border:1px solid rgba(255,255,255,.08);}
+.cms-embed iframe{width:100%;height:100%;display:block;}
+
+/* ---------- Logo marquee ---------- */
+.cms-marquee{overflow:hidden;}
+.cms-marquee .client-logo{animation:cmsMarquee 28s linear infinite;}
+.cms-marquee .client-logo:nth-child(even){animation-duration:32s;animation-direction:reverse;}
+@keyframes cmsMarquee{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(-8%);}
+}
+
+/* ---------- Barre d'aperçu admin ---------- */
+.cms-preview-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:9999;
+  display:flex;align-items:center;gap:14px;padding:10px 22px;
+  background:rgba(2,6,17,.92);backdrop-filter:blur(6px);
+  border-top:1px solid rgba(246,139,31,.4);color:#e8ecf7;
+  font-size:14px;font-weight:600;
+}
+.cms-preview-bar span{flex:1;}
+.cms-preview-bar a{
+  padding:6px 14px;border-radius:8px;
+  background:rgba(246,139,31,.18);color:var(--brain-orange-light);
+  transition:background .2s;
+}
+.cms-preview-bar a:hover{background:rgba(246,139,31,.32);}
+
 /* ============ REDUCED MOTION ============ */
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{

@@ -40,7 +40,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
 <link rel="stylesheet" href="css/style.css?v=2.3">
 </head>
-<body>
+<body data-page="home">
 
 <!-- ===================== HEADER ===================== -->
 <header id="site-header">
@@ -75,6 +75,8 @@
 </nav>
 
 <!-- ===================== HERO SLIDER ===================== -->
+<div class="cms-render-area" data-cms-page="home"></div>
+<div class="cms-static">
 <section id="hero" aria-label="Les expertises BRAIN">
   <div class="hero-slider" id="hero-slider" aria-live="polite">
     <div class="hero-slider-loading">
@@ -494,6 +496,7 @@
     </div>
   </div>
 </section>
+</div><!-- /.cms-static -->
 
 <!-- ===================== FOOTER ===================== -->
 <footer>
@@ -554,6 +557,8 @@
 <button id="back-to-top" aria-label="Retour en haut"><i class="fa-solid fa-arrow-up"></i></button>
 
 <script src="js/supabase.js?v=1.0"></script>
+<script src="js/cms/registry.js?v=1.0"></script>
+<script src="js/cms/renderer.js?v=1.0"></script>
 <script src="js/main.js?v=2.1"></script>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
