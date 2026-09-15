@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://www.braincobusiness.com/index.html</loc><priority>1.0</priority></url>
-  <url><loc>https://www.braincobusiness.com/services.html</loc><priority>0.9</priority></url>
-  <url><loc>https://www.braincobusiness.com/service-branding.html</loc><priority>0.8</priority></url>
-  <url><loc>https://www.braincobusiness.com/service-web.html</loc><priority>0.8</priority></url>
-  <url><loc>https://www.braincobusiness.com/service-social.html</loc><priority>0.8</priority></url>
-  <url><loc>https://www.braincobusiness.com/service-design.html</loc><priority>0.8</priority></url>
-  <url><loc>https://www.braincobusiness.com/service-films.html</loc><priority>0.8</priority></url>
-  <url><loc>https://www.braincobusiness.com/service-live.html</loc><priority>0.8</priority></url>
-  <url><loc>https://www.braincobusiness.com/service-digital.html</loc><priority>0.8</priority></url>
-  <url><loc>https://www.braincobusiness.com/portfolio.html</loc><priority>0.8</priority></url>
-  <url><loc>https://www.braincobusiness.com/a-propos.html</loc><priority>0.7</priority></url>
-  <url><loc>https://www.braincobusiness.com/contact.html</loc><priority>0.9</priority></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url><loc>https://www.braincobusiness.com/</loc><lastmod>2026-09-15</lastmod><priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.braincobusiness.com/"/><xhtml:link rel="alternate" hreflang="x-default" href="https://www.braincobusiness.com/"/></url>
+  <url><loc>https://www.braincobusiness.com/services.html</loc><lastmod>2026-09-15</lastmod><priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.braincobusiness.com/services.html"/></url>
+  <url><loc>https://www.braincobusiness.com/service-branding.html</loc><lastmod>2026-09-15</lastmod><priority>0.8</priority></url>
+  <url><loc>https://www.braincobusiness.com/service-web.html</loc><lastmod>2026-09-15</lastmod><priority>0.8</priority></url>
+  <url><loc>https://www.braincobusiness.com/service-social.html</loc><lastmod>2026-09-15</lastmod><priority>0.8</priority></url>
+  <url><loc>https://www.braincobusiness.com/service-design.html</loc><lastmod>2026-09-15</lastmod><priority>0.8</priority></url>
+  <url><loc>https://www.braincobusiness.com/service-films.html</loc><lastmod>2026-09-15</lastmod><priority>0.8</priority></url>
+  <url><loc>https://www.braincobusiness.com/service-live.html</loc><lastmod>2026-09-15</lastmod><priority>0.8</priority></url>
+  <url><loc>https://www.braincobusiness.com/service-digital.html</loc><lastmod>2026-09-15</lastmod><priority>0.8</priority></url>
+  <url><loc>https://www.braincobusiness.com/produits</loc><lastmod>2026-09-15</lastmod><priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.braincobusiness.com/produits"/><xhtml:link rel="alternate" hreflang="x-default" href="https://www.braincobusiness.com/produits"/></url>
+  <url><loc>https://www.braincobusiness.com/portfolio.html</loc><lastmod>2026-09-15</lastmod><priority>0.8</priority></url>
+  <url><loc>https://www.braincobusiness.com/a-propos.html</loc><lastmod>2026-09-15</lastmod><priority>0.7</priority></url>
+  <url><loc>https://www.braincobusiness.com/contact.html</loc><lastmod>2026-09-15</lastmod><priority>0.9</priority></url>
+  <url><loc>https://www.braincobusiness.com/blog</loc><lastmod>2026-09-15</lastmod><priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.braincobusiness.com/blog"/><xhtml:link rel="alternate" hreflang="x-default" href="https://www.braincobusiness.com/blog"/></url>
+  <url><loc>https://www.braincobusiness.com/blog/comment-digitaliser-une-pme-en-cote-divoire</loc><lastmod>2026-09-15</lastmod><priority>0.6</priority></url>
+  <url><loc>https://www.braincobusiness.com/blog/combien-coute-la-creation-d-un-site-web-en-cote-divoire</loc><lastmod>2026-09-15</lastmod><priority>0.6</priority></url>
 </urlset>

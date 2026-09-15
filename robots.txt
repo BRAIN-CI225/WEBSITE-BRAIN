@@ -1,4 +1,13 @@
 User-agent: *
 Allow: /
 
+# Zones privées — à ne pas indexer
+Disallow: /admin/
+Disallow: /skills/
+Disallow: /supabase/
+Disallow: /tools/
+
+# Modes d'aperçu CMS : jamais indexer
+Disallow: /*?preview=
+
 Sitemap: https://www.braincobusiness.com/sitemap.xml

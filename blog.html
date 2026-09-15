@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog & Conseils — Digitalisation, Création Web, Marketing | BRAIN</title>
+<meta name="description" content="Actualités, conseils, guides et expertises autour de la digitalisation, du numérique et de la transformation digitale en Côte d'Ivoire et en Afrique.">
+<meta name="keywords" content="blog digitalisation Côte d'Ivoire, conseil création site web Abidjan, marketing digital Afrique, stratégie digitale PME">
+<link rel="canonical" href="https://www.braincobusiness.com/blog">
+<link rel="alternate" hreflang="fr" href="https://www.braincobusiness.com/blog" />
+<link rel="alternate" hreflang="x-default" href="https://www.braincobusiness.com/blog" />
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="icon" type="image/png" href="ASSET/favicon.png">
+<link rel="apple-touch-icon" href="ASSET/apple-touch-icon.png">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="fr_FR">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BRAIN — Agence de Communication Digitale">
+<meta property="og:title" content="Blog & Conseils — Digitalisation, Création Web, Marketing | BRAIN">
+<meta property="og:description" content="Guides pratiques, conseils et retours d'expérience sur la digitalisation, le web, le marketing digital et la communication visuelle à Abidjan et en Afrique.">
+<meta property="og:url" content="https://www.braincobusiness.com/blog">
+<meta property="og:image" content="https://www.braincobusiness.com/ASSET/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Blog & Conseils — BRAIN">
+<meta name="twitter:description" content="Guides pratiques sur la digitalisation, le web et le marketing digital à Abidjan.">
+<meta name="twitter:image" content="https://www.braincobusiness.com/ASSET/og-image.png">
+
+<!-- Structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://www.braincobusiness.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.braincobusiness.com/blog.html" }
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+<link rel="stylesheet" href="css/style.css?v=2.4">
+</head>
+<body data-page="blog">
+
+<header id="site-header">
+  <div class="container">
+    <a href="index.html" class="brand-logo"><span class="brain-icon"><img src="ASSET/logo%20brain.svg" alt="Brain - Attirer - Convertir - Fidéliser"></span></a>
+    <nav class="main-nav"><ul>
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="services.html">Nos Services</a></li>
+      <li><a href="portfolio.html">Réalisations</a></li>
+      <li><a href="produits.html">Nos Produits</a></li>
+      <li><a href="blog.html" class="active">Blog</a></li>
+      <li><a href="a-propos.html">À propos</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul></nav>
+    <div class="header-actions">
+      <a href="contact.html" class="btn btn-primary btn-sm">Demander un devis</a>
+      <button class="burger" id="burger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+<div class="nav-overlay" id="nav-overlay"></div>
+<nav class="mobile-nav" id="mobile-nav">
+  <a href="index.html"><i class="fa-solid fa-house"></i>Accueil</a>
+  <a href="services.html"><i class="fa-solid fa-layer-group"></i>Nos Services</a>
+  <a href="portfolio.html"><i class="fa-solid fa-images"></i>Réalisations</a>
+  <a href="produits.html"><i class="fa-solid fa-cube"></i>Nos Produits</a>
+  <a href="blog.html"><i class="fa-solid fa-newspaper"></i>Blog</a>
+  <a href="a-propos.html"><i class="fa-solid fa-circle-info"></i>À propos</a>
+  <a href="contact.html"><i class="fa-solid fa-envelope"></i>Contact</a>
+  <a href="contact.html" class="btn btn-primary btn-block">Demander un devis</a>
+</nav>
+
+<!-- ===================== VUE LISTE ===================== -->
+<section class="page-hero">
+  <div class="container">
+    <div class="page-eyebrow" data-aos="fade-up">Le blog BRAIN</div>
+    <h1 data-aos="fade-up" data-aos-delay="80">Actualités, conseils &<br><span class="accent">expertises</span></h1>
+    <p data-aos="fade-up" data-aos-delay="160">Actualités, conseils, tendances et expertises autour de la digitalisation, du numérique et de la transformation digitale.</p>
+    <div class="breadcrumb" data-aos="fade-up" data-aos-delay="240"><a href="index.html">Accueil</a> <span class="bc-sep">/</span> <span class="bc-cur">Blog</span></div>
+  </div>
+</section>
+
+<section id="blog-liste" style="padding:0 0 20px;">
+  <div class="container">
+
+    <div id="blog-featured"></div>
+
+    <div class="blog-toolbar">
+      <div class="blog-search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="search" id="blog-search" placeholder="Rechercher un article…" aria-label="Rechercher un article">
+      </div>
+      <div class="blog-cats" id="blog-cats"></div>
+    </div>
+
+    <div class="articles-grid" id="blog-grid"></div>
+    <div id="blog-empty" class="cms-static" style="text-align:center;padding:40px 0;">
+      <i class="fa-solid fa-newspaper" style="font-size:40px;opacity:.5;display:block;margin-bottom:14px;"></i>
+      <p style="color:var(--brain-muted)">Aucun article pour le moment — nos contenus arrivent bientôt.</p>
+    </div>
+
+    <nav class="blog-pagination" id="blog-pagination" aria-label="Pagination des articles"></nav>
+
+    <div class="cta-section" data-aos="zoom-in" style="margin-top:60px;">
+      <h2>Un projet à concrétiser ?</h2>
+      <p>Digitalisation, site web, stratégie digitale ou communication visuelle — nous vous accompagnons de l'idée au lancement.</p>
+      <div class="cta-btns">
+        <a href="contact.html" class="btn btn-primary">Demander un devis gratuit</a>
+        <a href="services.html" class="btn btn-outline">Découvrir nos services</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== VUE ARTICLE ===================== -->
+<section id="blog-detail" style="display:none;padding:0;">
+  <div class="container" id="blog-detail-root"></div>
+  <div id="blog-detail-none" class="cms-static" style="display:none">
+    <div class="container" style="padding:70px 0;text-align:center">
+      <i class="fa-solid fa-circle-question" style="font-size:42px;opacity:.5;display:block;margin-bottom:14px;"></i>
+      <h2 style="color:var(--brain-white)">Article introuvable</h2>
+      <p style="color:var(--brain-muted);margin:10px 0 20px;">Cet article n'existe pas ou n'est plus disponible.</p>
+      <a href="blog.html" class="btn btn-primary">Retour au blog</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="brand-logo"><span class="brain-icon"><img src="ASSET/logo%20brain.svg" alt="Brain - Attirer - Convertir - Fidéliser"></span></a>
+        <div class="footer-signature">Attirer • Convertir • Fidéliser</div>
+        <p>Agence de communication digitale, audiovisuelle, créative et de transformation numérique basée à Abidjan, Côte d'Ivoire.</p>
+        <div class="social-row">
+          <a href="https://www.facebook.com/Braincobusiness" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="https://www.tiktok.com/@businessbrainco" target="_blank" rel="noopener" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="https://www.linkedin.com/in/business-brain-co-7a06533a8/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="https://www.youtube.com/@businessbrainco" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>Agence</h4><ul>
+        <li><a href="a-propos.html">À propos de BRAIN</a></li>
+        <li><a href="index.html#approche">Notre approche</a></li>
+        <li><a href="portfolio.html">Nos réalisations</a></li>
+        <li><a href="produits.html">Nos produits</a></li>
+        <li><a href="blog.html">Blog & conseils</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>Services</h4><ul>
+        <li><a href="service-digital.html">Digitalisation d'entreprise</a></li>
+        <li><a href="service-web.html">Création de sites web & e-commerce</a></li>
+        <li><a href="service-branding.html">Identité visuelle & branding</a></li>
+        <li><a href="service-social.html">Community management</a></li>
+        <li><a href="service-design.html">Design graphique & print</a></li>
+        <li><a href="service-films.html">Films publicitaires</a></li>
+        <li><a href="service-live.html">Captation & live</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>Zones</h4><ul>
+        <li><i class="fa-solid fa-location-dot"></i> Abidjan, Côte d'Ivoire</li>
+        <li><i class="fa-solid fa-earth-africa"></i> Afrique de l'Ouest</li>
+        <li><i class="fa-solid fa-globe"></i> Clients internationaux</li>
+      </ul></div>
+      <div class="footer-col"><h4>Contact</h4><ul>
+        <li><i class="fa-solid fa-location-dot"></i> Abidjan, Côte d'Ivoire</li>
+        <li><i class="fa-solid fa-phone"></i> +225 07 11 35 63 24</li>
+        <li><i class="fa-solid fa-phone"></i> +225 07 59 27 88 22</li>
+        <li><i class="fa-solid fa-globe"></i> www.braincobusiness.com</li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="year"></span> BRAIN — Tous droits réservés.</span>
+      <span><a href="contact.html">Demander un devis</a></span>
+      <span><a class="footer-admin-btn" href="https://www.braincobusiness.com/admin/" target="_blank" rel="noopener"><i class="fa-solid fa-user-shield"></i> Espace admin</a></span>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/2250711356324" id="whatsapp-float" target="_blank" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+<button id="back-to-top" aria-label="Retour en haut"><i class="fa-solid fa-arrow-up"></i></button>
+<script src="js/supabase.js?v=1.0"></script>
+<script src="js/cms/registry.js?v=1.0"></script>
+<script src="js/page-blog.js?v=1.0"></script>
+<script src="js/main.js?v=2.1"></script>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

@@ -348,3 +348,16 @@ input,select,textarea{font-family:inherit}
   color:#ffb3ba;border-radius:10px;padding:10px 12px;font-size:13px;margin-bottom:14px;
 }
 .ad-error-box ul{margin:4px 0 0;padding-left:18px}
+/* ---------- CRUD Produits & Blog ---------- */
+.ad-modal-form{max-width:780px}
+.ad-modal-form .ad-modal-body{max-height:72vh;overflow-y:auto}
+.ad-code{font-family:Consolas,Menlo,monospace;font-size:13px;line-height:1.55;min-height:220px}
+.ad-sm-inp{width:200px}
+.ad-btn.ad-sm:disabled{opacity:.35;cursor:not-allowed}
+.ad-warn{color:var(--ad-orange2)}
+.ad-warn:hover{border-color:var(--ad-orange2)}
+.ad-starf{color:var(--ad-orange)}
+.ad-staroff{color:var(--ad-muted)}
+@media(max-width:720px){
+  .ad-sm-inp{width:100%}
+}

@@ -152,7 +152,7 @@
   function route() {
     var r = parseRoute();
     var main = $('#ad-main');
-    var needsAuth = ['pages', 'media', 'settings', 'logs'];
+    var needsAuth = ['pages', 'media', 'settings', 'logs', 'products', 'blog'];
     if (r.name === 'login' || (needsAuth.indexOf(r.name) === -1)) {
       if (!user) { renderLogin(); syncTopbar(); return; }
     }
@@ -162,6 +162,8 @@
     if (r.name === 'media') return renderMedia();
     if (r.name === 'settings') return renderSettings();
     if (r.name === 'logs') return renderLogs();
+    if (r.name === 'products') return renderProducts();
+    if (r.name === 'blog') return renderBlogPosts();
     renderPages();
   }
   function syncTopbar() {
@@ -1122,6 +1124,472 @@
       $('.ad-close-preview', scrim).addEventListener('click', function () { scrim.remove(); });
       $('.ad-open-live', scrim).addEventListener('click', function () { window.open('../' + targetFile + '?preview=' + CURRENT.page.slug, '_blank', 'noopener'); });
     }).catch(function (e) { toast('Erreur aperçu : ' + e.message, 'err'); });
+  }
+
+  /* =========================================================
+     PRODUITS & BLOG — gestion (admin)
+     ========================================================= */
+  var PRODUCT_STATUS = [['draft', 'Brouillon'], ['published', 'Publié'], ['archived', 'Archivé']];
+  var BLOG_STATUS = PRODUCT_STATUS;
+
+  function statusBadge(status) {
+    var map = { published: 'Publié', archived: 'Archivé', draft: 'Brouillon' };
+    var cls = status === 'published' ? 'ad-b-published' : status === 'archived' ? 'ad-b-hidden' : 'ad-b-draft';
+    return '<span class="ad-badge ' + cls + '">' + esc(map[status] || status || '—') + '</span>';
+  }
+
+  /* -------- Champs de formulaire (types étendus) -------- */
+  function crudField(f, value) {
+    if (f.type === 'datetime' || f.type === 'code') {
+      var wrap = el('div', { class: 'ad-field' });
+      if (f.type === 'datetime') {
+        var v = value ? new Date(value).toISOString().slice(0, 16) : '';
+        wrap.innerHTML = '<label>' + esc(f.label) + '</label>' +
+          '<input type="datetime-local" class="ad-input" data-field="' + escAttr(f.name) + '" value="' + escAttr(v) + '">';
+      } else {
+        wrap.innerHTML = '<label>' + esc(f.label) + '</label>' +
+          '<textarea class="ad-textarea ad-code" data-field="' + escAttr(f.name) + '" placeholder="' + escAttr(f.placeholder || '') + '">' + esc(value == null ? '' : value) + '</textarea>';
+      }
+      if (f.help) wrap.appendChild(el('div', { class: 'ad-hint', text: f.help }));
+      return wrap;
+    }
+    return buildField(f, value, null);
+  }
+
+  function collectCrud(form) {
+    var data = {};
+    $$('[data-field]', form).forEach(function (input) {
+      var name = input.getAttribute('data-field');
+      if (!name || !input.closest) return;
+      if (input.closest('[data-repeater]')) return;
+      if (input.type === 'checkbox') { data[name] = input.checked; return; }
+      if (input.type === 'number') { data[name] = input.value === '' ? null : parseFloat(input.value); return; }
+      data[name] = input.getAttribute('type') === 'hidden' ? (input.value || null) : input.value;
+    });
+    $$('[data-repeater]', form).forEach(function (holder) {
+      var name = holder.getAttribute('data-name');
+      if (name && holder.__rep) data[name] = holder.__rep();
+    });
+    return data;
+  }
+
+  function openCrudModal(opts) {
+    var overlay = el('div', { class: 'ad-overlay' });
+    overlay.innerHTML = '<div class="ad-modal ad-modal-form">' +
+      '<div class="ad-modal-head"><h3 class="ad-modal-title">' + esc(opts.title) + '</h3>' +
+        '<button class="ad-btn ad-ghost ad-icon ad-close-x"><i class="fa-solid fa-xmark"></i></button></div>' +
+      '<div class="ad-modal-body"><form id="ad-crud-form"></form></div>' +
+      '<div class="ad-modal-foot"><div class="ad-right">' +
+        '<button class="ad-btn ad-ghost ad-cancel">Annuler</button>' +
+        '<button class="ad-btn ad-primary ad-crud-save"><i class="fa-solid fa-save"></i> Enregistrer</button>' +
+      '</div></div></div>';
+    pushDialog(overlay);
+
+    var form = $('#ad-crud-form', overlay);
+    (opts.fields || []).forEach(function (f) {
+      var val = opts.values ? (opts.values[f.name] !== undefined && opts.values[f.name] !== null ? opts.values[f.name] : (f.default !== undefined ? f.default : '')) : (f.default !== undefined ? f.default : '');
+      form.appendChild(crudField(f, val));
+    });
+
+    function close() { closeDialog(); overlay.remove(); }
+    $('.ad-close-x', overlay).addEventListener('click', close);
+    $('.ad-cancel', overlay).addEventListener('click', close);
+
+    $('.ad-crud-save', overlay).addEventListener('click', function () {
+      var btn = $('.ad-crud-save', overlay);
+      btn.disabled = true;
+      Promise.resolve(opts.onSave(collectCrud(form)))
+        .then(function () { close(); })
+        .catch(function (e) { toast((e && e.message) || 'Erreur', 'err'); btn.disabled = false; });
+    });
+  }
+
+  /* -------- Produits -------- */
+  var PRODUCT_FIELDS = [
+    { name: 'name', label: 'Nom du produit', type: 'text', placeholder: 'Ex : BRAIN CARE' },
+    { name: 'slug', label: 'Slug (URL)', type: 'text', help: 'URL publique : /produits/<slug>' },
+    { name: 'category', label: 'Catégorie', type: 'text', placeholder: 'Ex : Digitalisation' },
+    { name: 'slogan', label: 'Slogan', type: 'text', placeholder: 'Ex : Gérez votre entreprise où que vous soyez' },
+    { name: 'short_description', label: 'Description courte (carte)', type: 'textarea' },
+    { name: 'full_description', label: 'Présentation complète', type: 'textarea' },
+    { name: 'problem_solved', label: 'Problème résolu', type: 'textarea', help: 'Rédigé sous forme de paragraphe.' },
+    { name: 'presentation', label: 'Présentation', type: 'textarea' },
+    { name: 'logo', label: 'Logo (fichier)', type: 'image' },
+    { name: 'image', label: 'Image principale', type: 'image' },
+    { name: 'gallery', label: 'Galerie (images)', type: 'repeater', addLabel: 'Ajouter une image',
+      fields: [ { name: 'image', label: 'Image', type: 'image' } ] },
+    { name: 'video', label: 'Vidéo (URL YouTube / Vimeo)', type: 'text' },
+    { name: 'external_url', label: 'URL externe (démo, téléchargement…)', type: 'text' },
+    { name: 'cta_text', label: 'Texte du bouton CTA', type: 'text', default: 'Découvrir' },
+    { name: 'sector', label: 'Secteur d’activité (listé)', type: 'text' },
+    { name: 'target_audience', label: 'Public cible', type: 'text' },
+    { name: 'features', label: 'Fonctionnalités', type: 'repeater', addLabel: 'Ajouter une fonctionnalité',
+      fields: [ { name: 'title', label: 'Intitulé', type: 'text' }, { name: 'description', label: 'Description', type: 'text' } ] },
+    { name: 'benefits', label: 'Avantages', type: 'repeater', addLabel: 'Ajouter un avantage',
+      fields: [ { name: 'title', label: 'Intitulé', type: 'text' }, { name: 'description', label: 'Description', type: 'text' } ] },
+    { name: 'display_order', label: 'Ordre d’affichage', type: 'number' },
+    { name: 'status', label: 'Statut', type: 'select', options: PRODUCT_STATUS },
+    { name: 'seo_title', label: 'SEO — Titre (balise title)', type: 'text' },
+    { name: 'seo_description', label: 'SEO — Méta description', type: 'textarea' },
+    { name: 'canonical_url', label: 'SEO — URL canonique (optionnel)', type: 'text' },
+    { name: 'og_title', label: 'SEO — Titre Open Graph', type: 'text' },
+    { name: 'og_description', label: 'SEO — Description Open Graph', type: 'textarea' },
+    { name: 'og_image', label: 'SEO — Image Open Graph', type: 'image' },
+    { name: 'indexing', label: 'Indexation', type: 'select', options: [['index', 'Indexer la page'], ['noindex', 'Ne pas indexer']], default: 'index' },
+    { name: 'schema_json', label: 'SEO — JSON-LD personnalisé (optionnel)', type: 'code', help: 'JSON valide. Laissé vide = schéma Product généré automatiquement.' }
+  ];
+  var PROD_CACHE = [];
+  var PRODUCT_BOX = null;
+
+  function renderProducts() {
+    setActiveNav('products');
+    var main = $('#ad-main');
+    $('#ad-topbar').hidden = false;
+    main.innerHTML = '';
+    var head = el('div', { class: 'ad-page-head' }, [
+      el('div', {}, [
+        el('h1', { class: 'ad-page-title', text: 'Produits' }),
+        el('p', { class: 'ad-page-sub', html: 'Solutions & produits numériques publiés sur <code>/produits</code>. Statuts : brouillon, publié, archivé.' })
+      ]),
+      el('div', { class: 'ad-inline' }, [
+        el('input', { class: 'ad-input ad-sm-inp', id: 'ad-pf-search', type: 'search', placeholder: 'Rechercher…' }),
+        el('select', { class: 'ad-select', id: 'ad-pf-status', html: '<option value="">Tous les statuts</option><option value="published">Publié</option><option value="draft">Brouillon</option><option value="archived">Archivé</option>' }),
+        el('button', { class: 'ad-btn ad-primary', html: '<i class="fa-solid fa-plus"></i> Nouveau produit', onclick: function () { openProductEditor(null); } })
+      ])
+    ]);
+    main.appendChild(head);
+    var card = el('div', { class: 'ad-card' });
+    PRODUCT_BOX = el('div', {});
+    card.appendChild(PRODUCT_BOX);
+    main.appendChild(card);
+    $('#ad-pf-search').addEventListener('input', function () { renderProductTable(PRODUCT_BOX); });
+    $('#ad-pf-status').addEventListener('change', function () { renderProductTable(PRODUCT_BOX); });
+    loadProducts();
+  }
+
+  function loadProducts() {
+    if (!PRODUCT_BOX) return;
+    PRODUCT_BOX.innerHTML = '';
+    PRODUCT_BOX.appendChild(loading('Chargement des produits…'));
+    client.from('products').select('*').order('display_order', { ascending: true, nullsFirst: false })
+      .then(function (r) {
+        if (r.error) { PRODUCT_BOX.innerHTML = ''; PRODUCT_BOX.appendChild(el('div', { class: 'ad-empty', html: '<i class="fa-solid fa-circle-exclamation"></i>Erreur : ' + esc(r.error.message) })); return; }
+        PROD_CACHE = r.data || [];
+        renderProductTable(PRODUCT_BOX);
+      });
+  }
+
+  function productFilter() {
+    var q = $('#ad-pf-search') ? $('#ad-pf-search').value.toLowerCase() : '';
+    var st = $('#ad-pf-status') ? $('#ad-pf-status').value : '';
+    return PROD_CACHE.filter(function (p) {
+      if (st && (p.status || 'draft') !== st) return false;
+      if (q) {
+        var hay = ((p.name || '') + ' ' + (p.slug || '') + ' ' + (p.category || '') + ' ' + (p.sector || '')).toLowerCase();
+        if (hay.indexOf(q) === -1) return false;
+      }
+      return true;
+    });
+  }
+
+  function renderProductTable(box) {
+    box.innerHTML = '';
+    var list = productFilter();
+    if (!list.length) { box.appendChild(el('div', { class: 'ad-empty', html: '<i class="fa-solid fa-box-open"></i><div>Aucun produit trouvé.</div>' })); return; }
+    var table = el('table', { class: 'ad-table' });
+    table.innerHTML = '<thead><tr><th>Produit</th><th>Catégorie</th><th>Statut</th><th>Ordre</th><th style="text-align:right">Actions</th></tr></thead>';
+    var tb = el('tbody');
+    list.forEach(function (p, i) {
+      var tr = el('tr');
+      tr.appendChild(el('td', {}, [
+        el('div', { class: 'ad-row-title', text: p.name || '—' }),
+        p.slug ? el('div', { class: 'ad-row-sub', html: '/produits/' + esc(p.slug) }) : el('div', { class: 'ad-row-sub', text: 'Slug manquant' })
+      ]));
+      tr.appendChild(el('td', { text: p.category || '—' }));
+      tr.appendChild(el('td', { html: statusBadge(p.status) }));
+      tr.appendChild(el('td', { text: p.display_order == null ? '—' : p.display_order }));
+      tr.appendChild(el('td', {}, [ prodActions(p, i, list, box) ]));
+      tb.appendChild(tr);
+    });
+    table.appendChild(tb);
+    box.appendChild(table);
+  }
+
+  function prodActions(p, i, list, box) {
+    return el('div', { class: 'ad-row-actions' }, [
+      el('button', { class: 'ad-btn ad-sm ad-ghost', title: 'Monter', html: '<i class="fa-solid fa-arrow-up"></i>', disabled: i === 0, onclick: function () { moveProd(p, list[i - 1], box); } }),
+      el('button', { class: 'ad-btn ad-sm ad-ghost', title: 'Descendre', html: '<i class="fa-solid fa-arrow-down"></i>', disabled: i === list.length - 1, onclick: function () { moveProd(p, list[i + 1], box); } }),
+      el('button', { class: 'ad-btn ad-sm ad-ghost', title: 'Voir sur le site', html: '<i class="fa-solid fa-arrow-up-right-from-square"></i>', onclick: function () { window.open('../produits.html?p=' + encodeURIComponent(p.slug || ''), '_blank'); } }),
+      el('button', { class: 'ad-btn ad-sm ad-ghost', title: 'Modifier', html: '<i class="fa-solid fa-pen"></i>', onclick: function () { openProductEditor(p.id); } }),
+      el('button', { class: 'ad-btn ad-sm ad-ghost', title: 'Dupliquer', html: '<i class="fa-solid fa-copy"></i>', onclick: function () { duplicateProduct(p); } }),
+      el('button', { class: 'ad-btn ad-sm ' + (p.status === 'published' ? 'ad-warn' : 'ad-primary'), title: p.status === 'published' ? 'Dépublier' : 'Publier', html: p.status === 'published' ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>', onclick: function () { setProductStatus(p, p.status === 'published' ? 'draft' : 'published'); } }),
+      el('button', { class: 'ad-btn ad-sm ad-ghost', title: p.status === 'archived' ? 'Restaurer (brouillon)' : 'Archiver', html: p.status === 'archived' ? '<i class="fa-solid fa-box-open"></i>' : '<i class="fa-solid fa-box-archive"></i>', onclick: function () { setProductStatus(p, p.status === 'archived' ? 'draft' : 'archived'); } }),
+      el('button', { class: 'ad-btn ad-sm ad-danger', title: 'Supprimer', html: '<i class="fa-solid fa-trash"></i>', onclick: function () { deleteProduct(p); } })
+    ]);
+  }
+
+  function setProductStatus(p, st) {
+    client.from('products').update({ status: st }).eq('id', p.id).then(function (r) {
+      if (r.error) { toast(r.error.message, 'err'); return; }
+      toast(st === 'published' ? 'Produit publié' : st === 'archived' ? 'Produit archivé' : 'Produit dépublié', 'ok');
+      logActivity('update', 'products', p.id, { status: st });
+      loadProducts();
+    });
+  }
+  function moveProd(a, b, box) {
+    if (!b) return;
+    var oa = a.display_order == null ? 999 : a.display_order;
+    var ob = b.display_order == null ? 999 : b.display_order;
+    Promise.all([
+      client.from('products').update({ display_order: ob }).eq('id', a.id),
+      client.from('products').update({ display_order: oa }).eq('id', b.id)
+    ]).then(function (r) {
+      if (r[0] && (r[0].error || r[1].error)) { toast('Erreur lors du réordonnancement', 'err'); return; }
+      toast('Ordre mis à jour', 'ok');
+      loadProducts();
+    });
+  }
+  function duplicateProduct(p) {
+    var copy = Object.assign({}, p);
+    delete copy.id; delete copy.created_at; delete copy.updated_at;
+    copy.name = (p.name || 'Produit') + ' (copie)';
+    copy.slug = slugify((p.slug || p.name || 'produit') + '-copie') + '-' + Date.now().toString().slice(-4);
+    copy.status = 'draft';
+    copy.display_order = (p.display_order == null ? 0 : p.display_order) + 1;
+    client.from('products').insert(copy).then(function (r) {
+      if (r.error) { toast(r.error.message, 'err'); return; }
+      toast('Produit dupliqué', 'ok');
+      logActivity('create', 'products', r.data && r.data[0] && r.data[0].id);
+      loadProducts();
+    });
+  }
+  function deleteProduct(p) {
+    if (!confirm('Supprimer définitivement le produit « ' + (p.name || '') + ' » ?')) return;
+    client.from('products').delete().eq('id', p.id).then(function (r) {
+      if (r.error) { toast(r.error.message, 'err'); return; }
+      toast('Produit supprimé', 'ok');
+      logActivity('delete', 'products', p.id);
+      loadProducts();
+    });
+  }
+  function openProductEditor(id) {
+    var found = id ? PROD_CACHE.filter(function (p) { return p.id === id; })[0] : null;
+    if (id && !found) {
+      client.from('products').select('*').eq('id', id).single().then(function (r) { if (r.data) openProductEditorForm(r.data); });
+      return;
+    }
+    openProductEditorForm(found);
+  }
+  function openProductEditorForm(p) {
+    openCrudModal({
+      title: p ? ('Modifier : ' + p.name) : 'Nouveau produit',
+      fields: PRODUCT_FIELDS,
+      values: p || { status: 'draft', indexing: 'index', cta_text: 'Découvrir' },
+      onSave: function (data) {
+        var payload = {};
+        PRODUCT_FIELDS.forEach(function (f) { payload[f.name] = data[f.name] !== undefined ? data[f.name] : null; });
+['gallery', 'features', 'benefits'].forEach(function (k) {
+          if (Array.isArray(payload[k]) && !payload[k].length) payload[k] = null;
+        });
+        payload.gallery = (payload.gallery || []).map(function (g) { return typeof g === 'string' ? g : (g && g.image) || ''; }).filter(Boolean);
+        if (!payload.gallery.length) payload.gallery = null;
+        if (!payload.slug || !String(payload.slug).trim()) payload.slug = slugify(payload.name || 'produit');
+        if (payload.schema_json && String(payload.schema_json).trim()) {
+          try { JSON.parse(payload.schema_json); }
+          catch (e) { toast('JSON-LD invalide : ' + e.message, 'err'); throw { message: 'JSON-LD invalide' }; }
+        } else { payload.schema_json = null; }
+        var rec = p ? { id: p.id } : {};
+        return client.from('products').upsert(Object.assign(rec, payload)).then(function (r) {
+          if (r.error) { toast(r.error.message || 'Erreur', 'err'); throw { message: r.error.message }; }
+          toast(p ? 'Produit enregistré' : 'Produit créé', 'ok');
+          logActivity(p ? 'update' : 'create', 'products', p ? p.id : (r.data && r.data[0] && r.data[0].id));
+          loadProducts();
+        });
+      }
+    });
+  }
+
+  /* -------- Blog -------- */
+  var BLOG_FIELDS = [
+    { name: 'title', label: 'Titre de l’article', type: 'text' },
+    { name: 'slug', label: 'Slug (URL)', type: 'text', help: 'URL publique : /blog/<slug>' },
+    { name: 'excerpt', label: 'Extrait (résumé)', type: 'textarea' },
+    { name: 'content', label: 'Contenu (HTML riche)', type: 'code', placeholder: '<p>Votre contenu…</p><h2>Section</h2>' },
+    { name: 'image', label: 'Image principale', type: 'image' },
+    { name: 'author', label: 'Auteur', type: 'text', placeholder: 'Ex : BRAIN' },
+    { name: 'category', label: 'Catégorie', type: 'text', placeholder: 'Ex : Création web' },
+    { name: 'tags', label: 'Tags (séparés par des virgules)', type: 'text' },
+    { name: 'published_at', label: 'Date de publication', type: 'datetime' },
+    { name: 'status', label: 'Statut', type: 'select', options: BLOG_STATUS },
+    { name: 'is_featured', label: 'Article mis en avant (à la une)', type: 'checkbox' },
+    { name: 'seo_title', label: 'SEO — Titre (balise title)', type: 'text' },
+    { name: 'seo_description', label: 'SEO — Méta description', type: 'textarea' },
+    { name: 'canonical_url', label: 'SEO — URL canonique (optionnel)', type: 'text' },
+    { name: 'og_title', label: 'SEO — Titre Open Graph', type: 'text' },
+    { name: 'og_description', label: 'SEO — Description Open Graph', type: 'textarea' },
+    { name: 'og_image', label: 'SEO — Image Open Graph', type: 'image' },
+    { name: 'indexing', label: 'Indexation', type: 'select', options: [['index', 'Indexer la page'], ['noindex', 'Ne pas indexer']], default: 'index' }
+  ];
+  var BLOG_CACHE = [];
+  var BLOG_BOX = null;
+
+  function renderBlogPosts() {
+    setActiveNav('blog');
+    var main = $('#ad-main');
+    $('#ad-topbar').hidden = false;
+    main.innerHTML = '';
+    var head = el('div', { class: 'ad-page-head' }, [
+      el('div', {}, [
+        el('h1', { class: 'ad-page-title', text: 'Blog' }),
+        el('p', { class: 'ad-page-sub', html: 'Articles publiés sur <code>/blog</code>. Statuts : brouillon, publié, archivé — l\'étoile met un article en avant (à la une).' })
+      ]),
+      el('div', { class: 'ad-inline' }, [
+        el('input', { class: 'ad-input ad-sm-inp', id: 'ad-bl-search', type: 'search', placeholder: 'Rechercher…' }),
+        el('select', { class: 'ad-select', id: 'ad-bl-status', html: '<option value="">Tous les statuts</option><option value="published">Publié</option><option value="draft">Brouillon</option><option value="archived">Archivé</option>' }),
+        el('button', { class: 'ad-btn ad-primary', html: '<i class="fa-solid fa-plus"></i> Nouvel article', onclick: function () { openBlogEditor(null); } })
+      ])
+    ]);
+    main.appendChild(head);
+    var card = el('div', { class: 'ad-card' });
+    BLOG_BOX = el('div', {});
+    card.appendChild(BLOG_BOX);
+    main.appendChild(card);
+    $('#ad-bl-search').addEventListener('input', function () { renderBlogTable(BLOG_BOX); });
+    $('#ad-bl-status').addEventListener('change', function () { renderBlogTable(BLOG_BOX); });
+    loadBlogs();
+  }
+
+  function loadBlogs() {
+    if (!BLOG_BOX) return;
+    BLOG_BOX.innerHTML = '';
+    BLOG_BOX.appendChild(loading('Chargement des articles…'));
+    client.from('blog_posts').select('*').order('published_at', { ascending: false, nullsFirst: false })
+      .then(function (r) {
+        if (r.error) { BLOG_BOX.innerHTML = ''; BLOG_BOX.appendChild(el('div', { class: 'ad-empty', html: '<i class="fa-solid fa-circle-exclamation"></i>Erreur : ' + esc(r.error.message) })); return; }
+        BLOG_CACHE = r.data || [];
+        renderBlogTable(BLOG_BOX);
+      });
+  }
+
+  function blogFilter() {
+    var q = $('#ad-bl-search') ? $('#ad-bl-search').value.toLowerCase() : '';
+    var st = $('#ad-bl-status') ? $('#ad-bl-status').value : '';
+    return BLOG_CACHE.filter(function (p) {
+      if (st && (p.status || 'draft') !== st) return false;
+      if (q) {
+        var hay = ((p.title || '') + ' ' + (p.slug || '') + ' ' + (p.category || '') + ' ' + (p.excerpt || '')).toLowerCase();
+        if (hay.indexOf(q) === -1) return false;
+      }
+      return true;
+    });
+  }
+
+  function renderBlogTable(box) {
+    box.innerHTML = '';
+    var list = blogFilter();
+    if (!list.length) { box.appendChild(el('div', { class: 'ad-empty', html: '<i class="fa-solid fa-newspaper"></i><div>Aucun article trouvé.</div>' })); return; }
+    var table = el('table', { class: 'ad-table' });
+    table.innerHTML = '<thead><tr><th>Article</th><th>Catégorie</th><th>Date</th><th>Une</th><th>Statut</th><th style="text-align:right">Actions</th></tr></thead>';
+    var tb = el('tbody');
+    list.forEach(function (p) {
+      var tr = el('tr');
+      tr.appendChild(el('td', {}, [
+        el('div', { class: 'ad-row-title', text: p.title || '—' }),
+        p.slug ? el('div', { class: 'ad-row-sub', html: '/blog/' + esc(p.slug) }) : el('div', { class: 'ad-row-sub', text: 'Slug manquant' })
+      ]));
+      tr.appendChild(el('td', { text: p.category || '—' }));
+      tr.appendChild(el('td', { text: p.published_at ? fmtDate(p.published_at) : '—' }));
+      tr.appendChild(el('td', { html: '<i class="fa-solid ' + (p.is_featured ? 'fa-star ad-starf' : 'fa-star ad-staroff') + '"></i>' }));
+      tr.appendChild(el('td', { html: statusBadge(p.status) }));
+      tr.appendChild(el('td', {}, [ blogActions(p, box) ]));
+      tb.appendChild(tr);
+    });
+    table.appendChild(tb);
+    box.appendChild(table);
+  }
+
+  function blogActions(p, box) {
+    return el('div', { class: 'ad-row-actions' }, [
+      el('button', { class: 'ad-btn ad-sm ad-ghost', title: 'Voir sur le site', html: '<i class="fa-solid fa-arrow-up-right-from-square"></i>', onclick: function () { window.open('../blog.html?p=' + encodeURIComponent(p.slug || ''), '_blank'); } }),
+      el('button', { class: 'ad-btn ad-sm ad-ghost', title: 'Modifier', html: '<i class="fa-solid fa-pen"></i>', onclick: function () { openBlogEditor(p.id); } }),
+      el('button', { class: 'ad-btn ad-sm ' + (p.status === 'published' ? 'ad-warn' : 'ad-primary'), title: p.status === 'published' ? 'Dépublier' : 'Publier', html: p.status === 'published' ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>', onclick: function () { setBlogStatus(p, p.status === 'published' ? 'draft' : 'published'); } }),
+      el('button', { class: 'ad-btn ad-sm ad-ghost', title: p.status === 'archived' ? 'Restaurer (brouillon)' : 'Archiver', html: p.status === 'archived' ? '<i class="fa-solid fa-box-open"></i>' : '<i class="fa-solid fa-box-archive"></i>', onclick: function () { setBlogStatus(p, p.status === 'archived' ? 'draft' : 'archived'); } }),
+      el('button', { class: 'ad-btn ad-sm ad-ghost', title: p.is_featured ? 'Retirer de la une' : 'Mettre à la une', html: '<i class="fa-solid fa-star"></i>', onclick: function () { toggleFeatured(p); } }),
+      el('button', { class: 'ad-btn ad-sm ad-danger', title: 'Supprimer', html: '<i class="fa-solid fa-trash"></i>', onclick: function () { deleteBlogPost(p); } })
+    ]);
+  }
+
+  function setBlogStatus(p, st) {
+    client.from('blog_posts').update({ status: st, is_visible: st === 'published' }).eq('id', p.id).then(function (r) {
+      if (r.error) { toast(r.error.message, 'err'); return; }
+      toast(st === 'published' ? 'Article publié' : st === 'archived' ? 'Article archivé' : 'Article dépublié', 'ok');
+      logActivity('update', 'blog_posts', p.id, { status: st });
+      loadBlogs();
+    });
+  }
+  function toggleFeatured(p) {
+    client.from('blog_posts').update({ is_featured: !p.is_featured }).eq('id', p.id).then(function (r) {
+      if (r.error) { toast(r.error.message, 'err'); return; }
+      toast(p.is_featured ? 'Retiré de la une' : 'Mis en avant', 'ok');
+      logActivity('update', 'blog_posts', p.id, { is_featured: !p.is_featured });
+      loadBlogs();
+    });
+  }
+  function deleteBlogPost(p) {
+    if (!confirm('Supprimer définitivement l\'article « ' + (p.title || '') + ' » ?')) return;
+    client.from('blog_posts').delete().eq('id', p.id).then(function (r) {
+      if (r.error) { toast(r.error.message, 'err'); return; }
+      toast('Article supprimé', 'ok');
+      logActivity('delete', 'blog_posts', p.id);
+      loadBlogs();
+    });
+  }
+  function openBlogEditor(id) {
+    var found = id ? BLOG_CACHE.filter(function (p) { return p.id === id; })[0] : null;
+    if (id && !found) {
+      client.from('blog_posts').select('*').eq('id', id).single().then(function (r) { if (r.data) openBlogEditorForm(r.data); });
+      return;
+    }
+    openBlogEditorForm(found);
+  }
+  function openBlogEditorForm(p) {
+    openCrudModal({
+      title: p ? ('Modifier : ' + p.title) : 'Nouvel article',
+      fields: BLOG_FIELDS,
+      values: p || { status: 'draft', is_featured: false, indexing: 'index' },
+      onSave: function (data) {
+        if (!data.title || !String(data.title).trim()) { toast('Le titre est obligatoire', 'err'); throw { message: 'Titre requis' }; }
+        var status = data.status || 'draft';
+        var payload = {
+          title: data.title.trim(),
+          slug: (data.slug && String(data.slug).trim()) ? data.slug.trim() : slugify(data.title),
+          excerpt: data.excerpt || null,
+          content: data.content || null,
+          image: data.image || null,
+          author: data.author || null,
+          category: data.category || null,
+          tags: data.tags ? String(data.tags).trim() : null,
+          published_at: data.published_at ? new Date(data.published_at).toISOString() : null,
+          status: status,
+          is_featured: !!data.is_featured,
+          is_visible: status === 'published',
+          seo_title: data.seo_title || null,
+          seo_description: data.seo_description || null,
+          canonical_url: data.canonical_url || null,
+          og_title: data.og_title || null,
+          og_description: data.og_description || null,
+          og_image: data.og_image || null,
+          indexing: data.indexing || 'index'
+        };
+        var rec = p ? { id: p.id } : {};
+        return client.from('blog_posts').upsert(Object.assign(rec, payload)).then(function (r) {
+          if (r.error) { toast(r.error.message || 'Erreur', 'err'); throw { message: r.error.message }; }
+          toast(p ? 'Article enregistré' : 'Article créé', 'ok');
+          logActivity(p ? 'update' : 'create', 'blog_posts', p ? p.id : (r.data && r.data[0] && r.data[0].id));
+          loadBlogs();
+        });
+      }
+    });
   }
 
   /* =========================================================

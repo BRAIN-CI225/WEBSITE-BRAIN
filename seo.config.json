@@ -1,0 +1,179 @@
+{
+  "$comment": "Configuration SEO centralisée BRAIN — équivalent seo.config.ts pour site statique HTML. Source de vérité pour les métadonnées, le dictionnaire de mots-clés et les données structurées. Les valeurs de contact proviennent du site existant (aucune donnée inventée).",
+  "site": {
+    "brandName": "BRAIN",
+    "tradeName": "BRAINCOBUSINESS",
+    "siteUrl": "https://www.braincobusiness.com",
+    "requestedDomain": "https://braincobusiness.com",
+    "defaultLocale": "fr",
+    "supportedLocales": ["fr"],
+    "ogLocale": "fr_FR",
+    "inLanguage": "fr",
+    "favicon": "/ASSET/favicon.png",
+    "defaultImage": "https://www.braincobusiness.com/ASSET/og-image.png",
+    "defaultImageWidth": 1200,
+    "defaultImageHeight": 630,
+    "hreflang": {
+      "fr": "https://www.braincobusiness.com/",
+      "x-default": "https://www.braincobusiness.com/"
+    }
+  },
+  "identity": {
+    "slogan": "Attirer • Convertir • Fidéliser",
+    "positioning": "Agence digitale ivoirienne spécialisée dans la digitalisation, la création de sites web, les applications web et mobiles, la communication digitale, le design graphique, le marketing digital et les solutions numériques.",
+    "origin": "Côte d'Ivoire",
+    "headquarter": "Abidjan, Côte d'Ivoire",
+    "priorityMarket": "Côte d'Ivoire",
+    "regionalMarket": "Afrique",
+    "internationalMarket": "Monde",
+    "targets": {
+      "fr": ["Côte d'Ivoire", "Abidjan"],
+      "africa": ["Sénégal", "Cameroun", "Gabon", "Bénin", "Togo", "Burkina Faso", "Mali", "Guinée", "RDC", "Congo", "Maroc", "Tunisie", "Algérie"],
+      "anglophone": ["South Africa", "Kenya", "Ghana", "Nigeria", "Rwanda", "Tanzania", "Uganda"],
+      "international": ["France", "Belgique", "Suisse", "Canada", "Europe"]
+    }
+  },
+  "organization": {
+    "@type": "Organization",
+    "@id": "https://www.braincobusiness.com/#organization",
+    "websiteId": "https://www.braincobusiness.com/#website",
+    "name": "BRAIN",
+    "url": "https://www.braincobusiness.com/",
+    "logo": "https://www.braincobusiness.com/ASSET/apple-touch-icon.png",
+    "image": "https://www.braincobusiness.com/ASSET/og-image.png",
+    "telephone": "+2250711356324",
+    "telephoneDisplay": "+225 07 11 35 63 24",
+    "telephoneSecondaryDisplay": "+225 07 59 27 88 22",
+    "email": "braincobusiness@gmail.com",
+    "whatsapp": "2250711356324",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Abidjan",
+      "addressCountry": "CI"
+    },
+    "areaServed": [
+      { "@type": "Country", "name": "Côte d'Ivoire" },
+      { "@type": "Place", "name": "Afrique de l'Ouest" },
+      { "@type": "Place", "name": "International" }
+    ],
+    "sameAs": [
+      "https://www.facebook.com/Braincobusiness",
+      "https://www.tiktok.com/@businessbrainco",
+      "https://www.linkedin.com/in/business-brain-co-7a06533a8/",
+      "https://www.youtube.com/@businessbrainco"
+    ]
+  },
+  "socials": {
+    "facebook": "https://www.facebook.com/Braincobusiness",
+    "tiktok": "https://www.tiktok.com/@businessbrainco",
+    "linkedin": "https://www.linkedin.com/in/business-brain-co-7a06533a8/",
+    "youtube": "https://www.youtube.com/@businessbrainco",
+    "instagram": null,
+    "x": null
+  },
+  "defaultMeta": {
+    "siteName": "BRAIN — Agence de Communication Digitale",
+    "titleSuffix": "| BRAIN",
+    "titleTemplate": "[Service principal] | BRAIN – Agence digitale en Côte d'Ivoire",
+    "description": "BRAIN est une agence digitale ivoirienne spécialisée dans la digitalisation, les sites web, applications, marketing digital, communication, design et solutions numériques pour entreprises en Afrique et à l'international.",
+    "robots": "index, follow, max-image-preview:large"
+  },
+  "keywordDictionary": {
+    "brand": [
+      "BRAIN", "BRAIN CO BUSINESS", "BRAINCOBUSINESS", "Brain Côte d'Ivoire", "Brain Abidjan",
+      "Brain digital", "Brain agence digitale", "Brain agence numérique", "Brain solutions digitales",
+      "Brain transformation digitale"
+    ],
+    "digitalisation": [
+      "digitalisation", "digitalisation entreprise", "digitalisation des entreprises",
+      "digitalisation en Côte d'Ivoire", "digitalisation Abidjan", "digitalisation Afrique",
+      "solution de digitalisation", "agence de digitalisation", "digitalisation PME",
+      "digitalisation organisation", "transformation digitale", "transformation numérique",
+      "transformation digitale Côte d'Ivoire", "transformation digitale Afrique",
+      "conseil transformation digitale", "accompagnement digital"
+    ],
+    "web": [
+      "création site web", "création site internet", "créateur site web", "agence web",
+      "agence web Côte d'Ivoire", "agence web Abidjan", "création site web Côte d'Ivoire",
+      "création site internet Abidjan", "site vitrine", "site vitrine professionnel",
+      "site e-commerce", "e-commerce Côte d'Ivoire", "développement web", "développeur web",
+      "développement site internet", "site internet entreprise", "site web professionnel",
+      "site web Afrique", "création plateforme web"
+    ],
+    "applications": [
+      "application web", "application mobile", "développement application mobile",
+      "développement application web", "création application", "application métier",
+      "logiciel métier", "SaaS", "solution SaaS", "plateforme digitale", "plateforme web",
+      "application entreprise", "application de gestion", "logiciel de gestion"
+    ],
+    "marketing": [
+      "marketing digital", "agence marketing digital", "marketing digital Côte d'Ivoire",
+      "marketing digital Abidjan", "marketing Afrique", "stratégie digitale",
+      "communication digitale", "communication numérique", "communication entreprise",
+      "publicité digitale", "publicité en ligne", "acquisition digitale",
+      "génération de leads", "social media marketing", "community management",
+      "gestion réseaux sociaux", "création contenu digital"
+    ],
+    "seo": [
+      "SEO", "référencement naturel", "référencement Google", "agence SEO", "SEO Côte d'Ivoire",
+      "SEO Abidjan", "SEO Afrique", "référencement site web", "optimisation SEO", "audit SEO",
+      "consultant SEO", "référencement international", "SEO international", "SEO local",
+      "référencement local"
+    ],
+    "design": [
+      "design graphique", "agence design graphique", "design graphique Côte d'Ivoire",
+      "graphiste Côte d'Ivoire", "graphiste Abidjan", "création logo", "identité visuelle",
+      "branding", "charte graphique", "création supports communication", "design print",
+      "conception graphique", "création affiche", "création brochure", "création packaging"
+    ],
+    "video": [
+      "production vidéo", "production audiovisuelle", "montage vidéo", "vidéo entreprise",
+      "vidéo publicitaire", "motion design", "animation vidéo", "contenu vidéo",
+      "communication audiovisuelle"
+    ],
+    "africa": [
+      "agence digitale Afrique", "agence numérique Afrique", "digitalisation Afrique",
+      "transformation digitale Afrique", "solutions digitales Afrique", "technologie Afrique",
+      "innovation digitale Afrique", "entreprise digitale Afrique", "agence web Afrique",
+      "marketing digital Afrique", "communication digitale Afrique", "développement web Afrique"
+    ]
+  },
+  "localZones": [
+    "Côte d'Ivoire", "Abidjan", "Plateau", "Cocody", "Marcory", "Yopougon", "Treichville",
+    "Port-Bouët", "Deux-Plateaux", "Riviera", "Bingerville"
+  ],
+  "servicePages": {
+    "service-digital": "Digitalisation d'entreprise",
+    "service-web": "Création de sites web & e-commerce",
+    "service-branding": "Identité visuelle & branding",
+    "service-social": "Community management",
+    "service-design": "Design graphique & print",
+    "service-films": "Films publicitaires",
+    "service-live": "Captation & live"
+  },
+  "articles": [
+    {
+      "url": "https://www.braincobusiness.com/articles/combien-coute-la-creation-d-un-site-web-en-cote-divoire.html",
+      "title": "Combien coûte la création d'un site web en Côte d'Ivoire ?",
+      "category": "Web & e-commerce",
+      "date": "2026-09-14"
+    },
+    {
+      "url": "https://www.braincobusiness.com/articles/comment-digitaliser-une-pme-en-cote-divoire.html",
+      "title": "Comment digitaliser une PME en Côte d'Ivoire ?",
+      "category": "Digitalisation",
+      "date": "2026-09-14"
+    }
+  ],
+  "robotsBlockedPaths": ["/admin/", "/skills/", "/supabase/", "/tools/"],
+  "analytics": {
+    "ga4MeasurementId": null,
+    "gtmContainerId": null,
+    "note": "À configurer une fois les identifiants réels disponibles. Ne jamais publier d'identifiant fictif."
+  },
+  "rules": {
+    "noIndexPaths": ["/admin/", "/skills/", "/supabase/", "/tools/"],
+    "neverInvent": ["avis", "notes", "prix", "récompenses", "certifications", "données clients", "profils sociaux", "identifiants analytics"],
+    "nofollowExternal": true
+  }
+}
