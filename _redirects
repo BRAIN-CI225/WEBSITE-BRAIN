@@ -3,15 +3,16 @@ https://braincobusiness.com/*  https://www.braincobusiness.com/:splat  301!
 https://braincobusiness.com     https://www.braincobusiness.com/       301!
 
 # Redirection d'URL interne (confort + SEO) : index.html -> racine
-/index.html  /  301
+/index.html  /  301!
 
 # Canoniques propres : les .html sont redirigés vers l'URL nette
-/produits.html  /produits  301
-/blog.html       /blog      301
+# (flag ! requis : sans lui, Netlify sert le fichier statique existant à la source)
+/produits.html  /produits  301!
+/blog.html       /blog      301!
 
 # Anciens articles (fichiers statiques) -> articles du blog dynamique
-/articles/combien-coute-la-creation-d-un-site-web-en-cote-divoire.html  /blog/combien-coute-la-creation-d-un-site-web-en-cote-divoire  301
-/articles/comment-digitaliser-une-pme-en-cote-divoire.html              /blog/comment-digitaliser-une-pme-en-cote-divoire              301
+/articles/combien-coute-la-creation-d-un-site-web-en-cote-divoire.html  /blog/combien-coute-la-creation-d-un-site-web-en-cote-divoire  301!
+/articles/comment-digitaliser-une-pme-en-cote-divoire.html              /blog/comment-digitaliser-une-pme-en-cote-divoire              301!
 
 # SPA-like : les URL nettes /produits et /blog servent les pages dynamiques
 /produits     /produits.html  200
