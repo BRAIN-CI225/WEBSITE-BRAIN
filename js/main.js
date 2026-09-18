@@ -500,4 +500,30 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+  /* ---------- BOUTON DE PARTAGE : COPIER LE LIEN ---------- */
+  document.addEventListener('click', function(e){
+    const btn = e.target && e.target.closest ? e.target.closest('.article-share-copy') : null;
+    if(!btn) return;
+    const link = btn.getAttribute('data-copy') || '';
+    if(!link) return;
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(link).then(function(){ shareHint('Lien copié'); });
+    }else{
+      window.prompt('Copiez ce lien :', link);
+    }
+  });
+
+  function shareHint(msg){
+    let t = document.getElementById('toast-hint');
+    if(!t){
+      t = document.createElement('div');
+      t.id = 'toast-hint';
+      t.className = 'toast-hint';
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.classList.add('is-visible');
+    window.setTimeout(function(){ t.classList.remove('is-visible'); }, 2200);
+  }
+
 });

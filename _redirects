@@ -13,6 +13,11 @@ https://braincobusiness.com     https://www.braincobusiness.com/       301!
 # Anciens articles (fichiers statiques) -> articles du blog dynamique
 /articles/combien-coute-la-creation-d-un-site-web-en-cote-divoire.html  /blog/combien-coute-la-creation-d-un-site-web-en-cote-divoire  301!
 /articles/comment-digitaliser-une-pme-en-cote-divoire.html              /blog/comment-digitaliser-une-pme-en-cote-divoire              301!
+/articles/referencement-local-abidjan.html                              /blog/referencement-local-abidjan                               301!
+/articles/community-management-reseaux-sociaux-cote-divoire.html        /blog/community-management-reseaux-sociaux-cote-divoire         301!
+/articles/branding-identite-visuelle-cote-divoire.html                  /blog/branding-identite-visuelle-cote-divoire                   301!
+/articles/mobile-money-paiement-digital-cote-divoire.html               /blog/mobile-money-paiement-digital-cote-divoire                301!
+/articles/film-publicitaire-video-entreprise-cote-divoire.html          /blog/film-publicitaire-video-entreprise-cote-divoire           301!
 
 # SPA-like : les URL nettes /produits et /blog servent les pages dynamiques
 /produits     /produits.html  200

@@ -3,14 +3,23 @@
    - /blog.html        => liste (mis en avant + derniers articles,
                           catégories, recherche, pagination)
    - /blog/<slug>      => article (contenu depuis la table blog_posts)
-   Les articles proviennent UNIQUEMENT de Supabase : rien n'est
-   codé en dur dans le HTML.
+   Source primaire : Supabase (table blog_posts). Si Supabase est
+   indisponible, en erreur, ou sans article publié, un jeu de
+   secours local (js/data-blog.js) affiche les articles authentiques
+   du site afin que le blog ne soit jamais vide.
    ========================================================= */
 (function () {
   'use strict';
 
   var SITE = 'https://www.braincobusiness.com';
   var PER_PAGE = 6;
+
+  function localPosts() {
+    var f = window.BRAIN_BLOG_FALLBACK;
+    return (Array.isArray(f) ? f.slice() : []).filter(function (p) {
+      return p && p.status === 'published' && p.is_visible !== false;
+    });
+  }
 
   function onReady(fn) {
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn);
@@ -23,7 +32,7 @@
       var t = setInterval(function () {
         tries++;
         if (window.brainSupabase && window.brainSupabase.ready && window.brainSupabase.client) { clearInterval(t); cb(window.brainSupabase.client); }
-        else if (tries > 40) { clearInterval(t); }
+        else if (tries > 40) { clearInterval(t); cb(null); }
       }, 200);
     });
   }
@@ -32,10 +41,36 @@
   function escAttr(value) { return esc(value); }
   function sanitize(html) { return window.BRAINCMS ? window.BRAINCMS.sanitizeHtml(html) : String(html || ''); }
 
+  function siteRoot() {
+    try {
+      var scripts = document.getElementsByTagName('script');
+      for (var i = 0; i < scripts.length; i++) {
+        var src = scripts[i].src || '';
+        if (/\/js\/page-blog\.js/i.test(src)) return new URL('..', src).href;
+      }
+    } catch (e) {}
+    var parts = location.pathname.split('/');
+    parts.pop();
+    return parts.join('/') + '/';
+  }
+
   function absSrc(url) {
     if (!url) return '';
-    if (/^(https?:|data:|\/)/i.test(String(url))) return String(url);
-    return '/' + String(url).replace(/^\/+/, '');
+    var u = String(url);
+    if (/^(https?:|data:)/i.test(u)) return u;
+    if (u.charAt(0) === '/') return u;
+    try { return new URL(u, siteRoot()).href; }
+    catch (e) { return '/' + u.replace(/^\/+/, ''); }
+  }
+
+  function pageUrl(slug) {
+    var s = String(slug || '').replace(/[^a-z0-9-]/gi, '');
+    if (location.protocol === 'file:') return 'blog.html?p=' + encodeURIComponent(s);
+    return '/blog/' + s;
+  }
+
+  function blogHomeUrl() {
+    return location.protocol === 'file:' ? 'blog.html' : '/blog';
   }
 
   function fmtDate(iso) {
@@ -52,11 +87,11 @@
   }
 
   function route() {
+    var qp = new URLSearchParams(location.search).get('p');
+    if (qp) return { slug: qp };
     var path = location.pathname.replace(/\.html$/, '');
     var parts = path.split('/').filter(Boolean);
-    var qp = new URLSearchParams(location.search).get('p');
     if (parts[0] === 'blog') return { slug: parts[1] || null };
-    if (qp) return { slug: qp };
     return { slug: null };
   }
 
@@ -143,13 +178,12 @@
   function postCard(p, featured) {
     var meta = '';
     var bits = [];
-    if (p.published_at) bits.push('<time datetime="' + escAttr(p.published_at) + '"><i class="fa-solid fa-calendar"></i> ' + fmtDate(p.published_at) + '</time>');
     if (p.author) bits.push('<span><i class="fa-solid fa-user"></i> ' + esc(p.author) + '</span>');
     bits.push('<span><i class="fa-solid fa-clock"></i> ' + readingTime(p) + ' min</span>');
     meta = '<div class="article-meta">' + bits.join('') + '</div>';
 
     return '<article class="article-card' + (featured ? ' article-featured' : '') + '">' +
-      '<a href="/blog/' + escAttr(p.slug) + '" aria-label="Lire : ' + escAttr(p.title) + '">' +
+      '<a href="' + pageUrl(p.slug) + '" aria-label="Lire : ' + escAttr(p.title) + '">' +
         (p.image ? '<img src="' + escAttr(absSrc(p.image)) + '" alt="' + escAttr(p.title) + '" loading="lazy">' : '') +
       '</a>' +
       '<div class="article-body">' +
@@ -157,10 +191,10 @@
           (p.category ? '<span class="acat">' + esc(p.category) + '</span>' : '') +
           (p.tags && String(p.tags).trim() ? '<span class="article-tags">' + esc(String(p.tags).split(',').slice(0, 2).join(' · ').trim()) + '</span>' : '') +
         '</div>' +
-        '<h3><a href="/blog/' + escAttr(p.slug) + '">' + esc(p.title) + '</a></h3>' +
+        '<h3><a href="' + pageUrl(p.slug) + '">' + esc(p.title) + '</a></h3>' +
         (p.excerpt ? '<p class="article-excerpt">' + esc(p.excerpt) + '</p>' : '') +
         meta +
-        '<a href="/blog/' + escAttr(p.slug) + '" class="article-link">Lire l\'article <i class="fa-solid fa-arrow-right"></i></a>' +
+        '<a href="' + pageUrl(p.slug) + '" class="article-link">Lire l\'article <i class="fa-solid fa-arrow-right"></i></a>' +
       '</div></article>';
   }
 
@@ -168,7 +202,7 @@
     var block = el('div', { class: 'article-featured-wrap' });
     block.innerHTML =
       '<article class="article-featured">' +
-        '<a class="article-featured-media" href="/blog/' + escAttr(p.slug) + '">' +
+        '<a class="article-featured-media" href="' + pageUrl(p.slug) + '">' +
           (p.image ? '<img src="' + escAttr(absSrc(p.image)) + '" alt="' + escAttr(p.title) + '" loading="lazy">' : '') +
           '<span class="article-featured-badge"><i class="fa-solid fa-star"></i> À la une</span>' +
         '</a>' +
@@ -177,11 +211,10 @@
           '<h2><a href="/blog/' + escAttr(p.slug) + '">' + esc(p.title) + '</a></h2>' +
           (p.excerpt ? '<p class="article-excerpt">' + esc(p.excerpt) + '</p>' : '') +
           '<div class="article-meta">' +
-            (p.published_at ? '<time datetime="' + escAttr(p.published_at) + '"><i class="fa-solid fa-calendar"></i> ' + fmtDate(p.published_at) + '</time>' : '') +
             (p.author ? '<span><i class="fa-solid fa-user"></i> ' + esc(p.author) + '</span>' : '') +
             '<span><i class="fa-solid fa-clock"></i> ' + readingTime(p) + ' min</span>' +
           '</div>' +
-          '<a href="/blog/' + escAttr(p.slug) + '" class="article-link">Lire l\'article <i class="fa-solid fa-arrow-right"></i></a>' +
+          '<a href="' + pageUrl(p.slug) + '" class="article-link">Lire l\'article <i class="fa-solid fa-arrow-right"></i></a>' +
         '</div>' +
       '</article>';
     return block;
@@ -266,6 +299,15 @@
     }
   }
 
+  function applyPosts(posts) {
+    state.posts = posts;
+    var map = {};
+    posts.forEach(function (p) { if (p.category) map[p.category] = true; });
+    state.categories = Object.keys(map).sort(function (a, b) { return a.localeCompare(b); });
+    state.onlyFeatured = false;
+    renderListing();
+  }
+
   function loadListing(client) {
     var search = document.getElementById('blog-search');
     if (search) {
@@ -276,20 +318,20 @@
       });
     }
 
-    client.from('blog_posts')
-      .select('*')
-      .eq('status', 'published')
-      .eq('is_visible', true)
-      .order('published_at', { ascending: false })
-      .then(function (res) {
-        var posts = res.data || [];
-        state.posts = posts;
-        var map = {};
-        posts.forEach(function (p) { if (p.category) map[p.category] = true; });
-        state.categories = Object.keys(map).sort(function (a, b) { return a.localeCompare(b); });
-        state.onlyFeatured = false;
-        renderListing();
-      });
+    if (client && client.from) {
+      client.from('blog_posts')
+        .select('*')
+        .eq('status', 'published')
+        .eq('is_visible', true)
+        .order('published_at', { ascending: false })
+        .then(function (res) {
+          var posts = res.data || [];
+          applyPosts(posts.length ? posts : localPosts());
+        })
+        .catch(function () { applyPosts(localPosts()); });
+    } else {
+      applyPosts(localPosts());
+    }
   }
 
   /* ---------- ARTICLE ---------- */
@@ -320,23 +362,22 @@
     var related = relatedPosts(posts, p);
     var relCards = related.map(function (q) {
       return '<article class="article-card">' +
-        '<a href="/blog/' + escAttr(q.slug) + '"><img src="' + escAttr(absSrc(q.image)) + '" alt="' + escAttr(q.title) + '" loading="lazy"></a>' +
+        '<a href="' + pageUrl(q.slug) + '"><img src="' + escAttr(absSrc(q.image)) + '" alt="' + escAttr(q.title) + '" loading="lazy"></a>' +
         '<div class="article-body">' +
           (q.category ? '<span class="acat">' + esc(q.category) + '</span>' : '') +
-          '<h3><a href="/blog/' + escAttr(q.slug) + '">' + esc(q.title) + '</a></h3>' +
+          '<h3><a href="' + pageUrl(q.slug) + '">' + esc(q.title) + '</a></h3>' +
           '<p class="article-excerpt">' + esc(q.excerpt) + '</p>' +
-          '<a href="/blog/' + escAttr(q.slug) + '" class="article-link">Lire l\'article <i class="fa-solid fa-arrow-right"></i></a>' +
+          '<a href="' + pageUrl(q.slug) + '" class="article-link">Lire l\'article <i class="fa-solid fa-arrow-right"></i></a>' +
         '</div></article>';
     }).join('');
 
     root.innerHTML =
-      '<nav class="breadcrumb" aria-label="Fil d\'Ariane"><a href="/">Accueil</a> <span class="bc-sep">/</span> <a href="/blog">Blog</a> <span class="bc-sep">/</span> <span class="bc-cur">' + esc(p.title) + '</span></nav>' +
+      '<nav class="breadcrumb" aria-label="Fil d\'Ariane"><a href="/">Accueil</a> <span class="bc-sep">/</span> <a href="' + blogHomeUrl() + '">Blog</a> <span class="bc-sep">/</span> <span class="bc-cur">' + esc(p.title) + '</span></nav>' +
       '<article class="article-detail">' +
         '<header class="article-detail-head">' +
           '<div class="article-detail-cat">' + esc(p.category || '') + '</div>' +
           '<h1>' + esc(p.title) + '</h1>' +
           '<div class="article-meta">' +
-            (p.published_at ? '<time datetime="' + escAttr(p.published_at) + '"><i class="fa-solid fa-calendar"></i> ' + fmtDate(p.published_at) + '</time>' : '') +
             (p.author ? '<span><i class="fa-solid fa-user"></i> ' + esc(p.author) + '</span>' : '') +
             '<span><i class="fa-solid fa-clock"></i> Lecture : ' + readingTime(p) + ' min</span>' +
           '</div>' +
@@ -360,28 +401,7 @@
         '</div>' +
       '</div>';
 
-    var copyBtn = root.querySelector('.article-share-copy');
-    if (copyBtn) {
-      copyBtn.addEventListener('click', function () {
-        if (navigator.clipboard) navigator.clipboard.writeText(copyBtn.getAttribute('data-copy')).then(function () { toastHint('Lien copié'); });
-        else window.prompt('Copiez ce lien :', url);
-      });
-    }
-
     applyArticleSeo(p);
-  }
-
-  function toastHint(msg) {
-    var t = document.getElementById('toast-hint');
-    if (!t) {
-      t = document.createElement('div');
-      t.id = 'toast-hint';
-      t.className = 'toast-hint';
-      document.body.appendChild(t);
-    }
-    t.textContent = msg;
-    t.classList.add('is-visible');
-    setTimeout(function () { t.classList.remove('is-visible'); }, 2200);
   }
 
   /* ---------- BOOT ---------- */
@@ -394,23 +414,32 @@
       var none = document.getElementById('blog-detail-none');
       if (detail) detail.style.display = '';
 
-      client.from('blog_posts')
-        .select('*')
-        .eq('status', 'published')
-        .eq('is_visible', true)
-        .order('published_at', { ascending: false })
-        .then(function (all) {
-          var posts = all.data || [];
-          var p = posts.filter(function (q) { return q.slug === r.slug; })[0] || null;
-          if (p) {
-            renderArticle(p, posts);
-          } else {
-            if (none) none.style.display = '';
-            var root = document.getElementById('blog-detail-root');
-            if (root) root.innerHTML = '';
-            clearDynamicSeo();
-          }
-        });
+      function show(posts) {
+        var p = posts.filter(function (q) { return q.slug === r.slug; })[0] || null;
+        if (p) {
+          renderArticle(p, posts);
+        } else {
+          if (none) none.style.display = '';
+          var root = document.getElementById('blog-detail-root');
+          if (root) root.innerHTML = '';
+          clearDynamicSeo();
+        }
+      }
+
+      if (client && client.from) {
+        client.from('blog_posts')
+          .select('*')
+          .eq('status', 'published')
+          .eq('is_visible', true)
+          .order('published_at', { ascending: false })
+          .then(function (all) {
+            var posts = all.data || [];
+            show(posts.length ? posts : localPosts());
+          })
+          .catch(function () { show(localPosts()); });
+      } else {
+        show(localPosts());
+      }
       return;
     }
 

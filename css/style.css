@@ -2130,6 +2130,9 @@ select option{background:#0b1330;color:var(--brain-white);}
 .article-prose .article-card-cta p{margin:0 0 12px;}
 .article-back{display:inline-flex;align-items:center;gap:8px;color:var(--brain-muted);font-size:.85rem;margin-top:6px;transition:color .25s;}
 .article-back:hover{color:var(--brain-orange-light);}
+.article-prose figure{margin:30px 0;}
+.article-prose figure img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:14px;border:1px solid var(--brain-border-soft);display:block;}
+.article-prose figcaption{font-size:.82rem;color:var(--brain-muted);line-height:1.7;margin-top:10px;}
 @media(max-width:880px){.articles-grid{grid-template-columns:1fr;}}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{

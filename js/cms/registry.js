@@ -337,7 +337,6 @@
       { name: 'category', label: 'Filtrer par catégorie', type: 'text', placeholder: 'laisser vide pour tout afficher' },
       { name: 'featured_only', label: 'Uniquement les articles mis en avant', type: 'checkbox', default: false },
       { name: 'show_excerpt', label: 'Afficher le résumé', type: 'checkbox', default: true },
-      { name: 'show_date', label: 'Afficher la date', type: 'checkbox', default: true },
       { name: 'show_author', label: 'Afficher l\'auteur', type: 'checkbox', default: true }
     ]),
     validate: function (cfg) {
@@ -352,10 +351,9 @@
       var list = posts.slice(0, parseInt(cfg.limit, 10) || 3);
       var items = list.map(function (p) {
         var meta = '';
-        if (cfg.show_date !== false || cfg.show_author !== false) {
+        if (cfg.show_author !== false) {
           var bits = [];
-          if (cfg.show_date !== false && p.published_at) bits.push('<time datetime="' + escAttr(p.published_at) + '">' + fmtDate(p.published_at) + '</time>');
-          if (cfg.show_author !== false && p.author) bits.push('<span><i class="fa-solid fa-user"></i> ' + esc(p.author) + '</span>');
+          if (p.author) bits.push('<span><i class="fa-solid fa-user"></i> ' + esc(p.author) + '</span>');
           meta = '<div class="cms-post-meta">' + bits.join('') + '</div>';
         }
         return '<article class="cms-post">' +
