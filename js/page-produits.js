@@ -26,7 +26,7 @@
       var timer = setInterval(function () {
         tries++;
         if (window.brainSupabase && window.brainSupabase.ready && window.brainSupabase.client) { clearInterval(timer); cb(window.brainSupabase.client); }
-        else if (tries > 40) { clearInterval(timer); }
+        else if (tries > 40) { clearInterval(timer); cb(null); }
       }, 200);
     });
   }
@@ -47,6 +47,13 @@
     var d = new Date(iso);
     if (isNaN(d.getTime())) return '';
     return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  function localProducts() {
+    var f = window.BRAIN_PRODUITS_FALLBACK;
+    return (Array.isArray(f) ? f.slice() : []).filter(function (p) {
+      return p && p.status === 'published' && p.is_visible !== false;
+    });
   }
 
   function route() {
@@ -75,6 +82,8 @@
     var desc = p.seo_description || p.short_description || '';
     var url = p.canonical_url || (SITE + '/produits/' + p.slug);
     var image = p.og_image || p.image || '';
+    var imageAbs = image ? absSrc(image) : '';
+    if (imageAbs && imageAbs.charAt(0) === '/') imageAbs = SITE + imageAbs;
 
     document.title = title;
     upsertMeta('name', 'description', desc);
@@ -83,10 +92,10 @@
     upsertMeta('property', 'og:title', p.og_title || title);
     upsertMeta('property', 'og:description', p.og_description || desc);
     upsertMeta('property', 'og:url', url);
-    if (image) upsertMeta('property', 'og:image', absSrc(image));
+    if (image) upsertMeta('property', 'og:image', imageAbs);
     upsertMeta('name', 'twitter:title', p.og_title || title);
     upsertMeta('name', 'twitter:description', p.og_description || desc);
-    if (image) upsertMeta('name', 'twitter:image', absSrc(image));
+    if (image) upsertMeta('name', 'twitter:image', imageAbs);
 
     var canonical = document.querySelector('link[rel="canonical"]');
     if (canonical) canonical.setAttribute('href', url);
@@ -119,9 +128,10 @@
   /* ---------- CARTE PRODUIT (liste) ---------- */
   function card(p) {
     var img = p.image || p.logo;
+    var alt = p.image_alt || p.name;
     var priceLine = '';
     return '<a class="product-card" href="/produits/' + escAttr(p.slug) + '">' +
-      (img ? '<div class="product-card-media"><img src="' + escAttr(absSrc(img)) + '" alt="' + escAttr(p.name) + '" loading="lazy"></div>' : '') +
+      (img ? '<div class="product-card-media"><img src="' + escAttr(absSrc(img)) + '" alt="' + escAttr(alt) + '" loading="lazy"></div>' : '') +
       '<div class="product-card-body">' +
         '<div class="product-card-top">' +
           (p.category ? '<span class="product-chip">' + esc(p.category) + '</span>' : '') +
@@ -143,6 +153,7 @@
     if (!root) return;
 
     var img = p.image || p.logo;
+    var imgAlt = p.image_alt || p.name;
     var cta;
     if (p.external_url && /^https?:/i.test(p.external_url)) {
       cta = '<a class="btn btn-primary" href="' + escAttr(p.external_url) + '" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> ' + esc(p.cta_text || 'Découvrir la solution') + '</a>';
@@ -167,7 +178,7 @@
             '<a class="btn btn-outline" href="/contact">Parlons de votre projet</a>' +
           '</div>' +
         '</div>' +
-        (img ? '<div class="product-hero-media"><img src="' + escAttr(absSrc(img)) + '" alt="' + escAttr(p.name) + '"></div>' : '') +
+        (img ? '<div class="product-hero-media"><img src="' + escAttr(absSrc(img)) + '" alt="' + escAttr(imgAlt) + '"></div>' : '') +
       '</div></header>';
 
     /* Sections optionnelles (rendues uniquement si renseignées) */
@@ -265,45 +276,64 @@
   function render(client) {
     var r = route();
     if (r.slug) {
-      client.from('products').select('*').eq('slug', r.slug).eq('status', 'published').maybeSingle()
-        .then(function (res) {
-          var p = res.error || !res.data ? null : res.data;
-          var list = document.getElementById('produits-liste');
-          var detail = document.getElementById('produits-detail');
-          if (list) list.style.display = 'none';
-          var none = document.getElementById('produits-detail-none');
-          if (detail && p) {
-            detail.style.display = '';
-            renderDetail(p);
-            applySeo(p);
-          } else {
-            if (none) none.style.display = '';
-            var listing = document.getElementById('produits-grid');
-            if (listing) { listing.innerHTML = ''; }
-            var empty = document.getElementById('produits-empty');
-            if (empty) empty.style.display = '';
-          }
-        });
+      function showDetail(p) {
+        var list = document.getElementById('produits-liste');
+        var detail = document.getElementById('produits-detail');
+        if (list) list.style.display = 'none';
+        var none = document.getElementById('produits-detail-none');
+        if (detail && p) {
+          detail.style.display = '';
+          renderDetail(p);
+          applySeo(p);
+        } else {
+          if (none) none.style.display = '';
+          var listing = document.getElementById('produits-grid');
+          if (listing) { listing.innerHTML = ''; }
+          var empty = document.getElementById('produits-empty');
+          if (empty) empty.style.display = '';
+        }
+      }
+      if (client && client.from) {
+        client.from('products').select('*').eq('slug', r.slug).eq('status', 'published').maybeSingle()
+          .then(function (res) {
+            var p = (res && res.data) ? res.data : null;
+            showDetail(p || (function () {
+              return localProducts().filter(function (q) { return q.slug === r.slug; })[0] || null;
+            })());
+          })
+          .catch(function () {
+            showDetail(localProducts().filter(function (q) { return q.slug === r.slug; })[0] || null);
+          });
+      } else {
+        showDetail(localProducts().filter(function (q) { return q.slug === r.slug; })[0] || null);
+      }
       return;
     }
 
     /* LISTE */
-    client.from('products').select('*').eq('status', 'published')
-      .order('display_order', { ascending: true })
-      .order('created_at', { ascending: true })
-      .then(function (res) {
-        var list = res.data || [];
-        var grid = document.getElementById('produits-grid');
-        var empty = document.getElementById('produits-empty');
-        if (grid) {
-          grid.innerHTML = list.map(card).join('');
-          if (list.length) {
-            if (empty) empty.style.display = 'none';
-          } else {
-            if (empty) empty.style.display = '';
-          }
+    function applyList(list) {
+      var grid = document.getElementById('produits-grid');
+      var empty = document.getElementById('produits-empty');
+      if (grid) {
+        grid.innerHTML = list.map(card).join('');
+        if (list.length) {
+          if (empty) empty.style.display = 'none';
+        } else {
+          if (empty) empty.style.display = '';
         }
-      });
+      }
+    }
+    function loadList(client2) {
+      if (!client2 || !client2.from) { applyList(localProducts()); return; }
+      client2.from('products').select('*').eq('status', 'published')
+        .order('display_order', { ascending: true })
+        .order('created_at', { ascending: true })
+        .then(function (res) {
+          applyList((res.data || []).length ? res.data : localProducts());
+        })
+        .catch(function () { applyList(localProducts()); });
+    }
+    loadList(client);
   }
 
   whenSupabase(render);

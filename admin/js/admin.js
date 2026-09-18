@@ -1216,6 +1216,7 @@
     { name: 'presentation', label: 'Présentation', type: 'textarea' },
     { name: 'logo', label: 'Logo (fichier)', type: 'image' },
     { name: 'image', label: 'Image principale', type: 'image' },
+    { name: 'image_alt', label: 'Texte ALT SEO de l’image principale', type: 'text', placeholder: 'Description précise et descriptive pour le SEO…' },
     { name: 'gallery', label: 'Galerie (images)', type: 'repeater', addLabel: 'Ajouter une image',
       fields: [ { name: 'image', label: 'Image', type: 'image' } ] },
     { name: 'video', label: 'Vidéo (URL YouTube / Vimeo)', type: 'text' },

@@ -28,6 +28,15 @@ const PROMPTS_FILE = path.join(ROOT, 'ASSET', 'prompts-images-blog.md');
 const REDIRECTS_FILE = path.join(ROOT, '_redirects');
 const TEASER_INDEX = path.join(ROOT, 'index.html');
 const BLOG_HTML = path.join(ROOT, 'blog.html');
+const PRODUITS_HTML = path.join(ROOT, 'produits.html');
+
+/* URL propres (sans .html) servies comme leurs fichiers statiques, comme Netlify (_redirects) */
+const CLEAN_ROUTES = {
+  '/contact': 'contact.html',
+  '/services': 'services.html',
+  '/portfolio': 'portfolio.html',
+  '/a-propos': 'a-propos.html'
+};
 
 const ISSUES = [];
 const INFO = [];
@@ -281,6 +290,10 @@ function serveStatic(port, wantOpen) {
     if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
       if (/^\/blog\//.test(pathname) || pathname === '/blog') {
         finalPath = BLOG_HTML;
+      } else if (/^\/produits\//.test(pathname) || pathname === '/produits') {
+        finalPath = PRODUITS_HTML;
+      } else if (CLEAN_ROUTES[pathname]) {
+        finalPath = path.join(ROOT, CLEAN_ROUTES[pathname]);
       } else {
         finalPath = path.join(ROOT, '404.html');
         status = 404;
@@ -312,6 +325,8 @@ function serveStatic(port, wantOpen) {
     console.log('Serveur local démarré : ' + url);
     console.log('  Liste blog           : ' + url + 'blog.html');
     console.log('  Article (démo)       : ' + url + 'blog/referencement-local-abidjan');
+    console.log('  Produits             : ' + url + 'produits');
+    console.log('  Produit (démo)       : ' + url + 'produits/brain-care');
     console.log('  Quitter : Ctrl+C');
     if (wantOpen && os.platform() === 'win32') {
       try { spawn('cmd', ['/c', 'start', '""', url], { stdio: 'ignore' }).unref(); }

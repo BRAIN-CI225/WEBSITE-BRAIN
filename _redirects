@@ -9,6 +9,10 @@ https://braincobusiness.com     https://www.braincobusiness.com/       301!
 # (flag ! requis : sans lui, Netlify sert le fichier statique existant à la source)
 /produits.html  /produits  301!
 /blog.html       /blog      301!
+/contact.html    /contact   301!
+/services.html   /services  301!
+/portfolio.html  /portfolio  301!
+/a-propos.html   /a-propos   301!
 
 # Anciens articles (fichiers statiques) -> articles du blog dynamique
 /articles/combien-coute-la-creation-d-un-site-web-en-cote-divoire.html  /blog/combien-coute-la-creation-d-un-site-web-en-cote-divoire  301!
@@ -19,10 +23,14 @@ https://braincobusiness.com     https://www.braincobusiness.com/       301!
 /articles/mobile-money-paiement-digital-cote-divoire.html               /blog/mobile-money-paiement-digital-cote-divoire                301!
 /articles/film-publicitaire-video-entreprise-cote-divoire.html          /blog/film-publicitaire-video-entreprise-cote-divoire           301!
 
-# SPA-like : les URL nettes /produits et /blog servent les pages dynamiques
-/produits     /produits.html  200
-/produits/    /produits.html  200
-/produits/*   /produits.html  200
-/blog         /blog.html      200
-/blog/        /blog.html      200
-/blog/*       /blog.html      200
+# SPA-like : les URL nettes servent les pages statiques correspondantes
+/produits      /produits.html  200
+/produits/     /produits.html  200
+/produits/*    /produits.html  200
+/blog          /blog.html      200
+/blog/         /blog.html      200
+/blog/*        /blog.html      200
+/contact       /contact.html   200
+/services      /services.html  200
+/portfolio     /portfolio.html 200
+/a-propos      /a-propos.html  200
