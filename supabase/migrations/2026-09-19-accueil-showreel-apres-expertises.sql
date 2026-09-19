@@ -8,7 +8,7 @@
 
 do $$
 declare
-  v_page bigint;
+  v_page uuid;
 begin
   select id into v_page from public.pages where slug = 'home';
   if v_page is null then
