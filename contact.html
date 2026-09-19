@@ -105,11 +105,10 @@
   <div class="container">
     <div class="contact-layout">
       <div data-aos="fade-right">
+        <div id="form-error" class="form-error" role="alert"></div>
         <div id="form-success" class="form-success"><i class="fa-solid fa-circle-check"></i> Votre demande a bien été envoyée. Notre équipe vous recontactera très rapidement.</div>
-        <form class="contact-form" id="contact-form" action="https://formsubmit.co/braincobusiness@gmail.com" method="POST" novalidate>
-          <input type="hidden" name="_template" value="table">
-          <input type="hidden" name="_captcha" value="false">
-          <input type="hidden" name="_subject" value="Nouvelle demande de contact — Site BRAIN">
+        <form class="contact-form" id="contact-form" action="/.netlify/functions/send-mail" method="POST" novalidate>
+          <input type="hidden" name="_honey" value="" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;width:1px;height:1px;">
           <div class="form-row">
             <div class="form-group">
               <label for="nom">Nom complet *</label>
@@ -269,9 +268,9 @@
 <a href="https://wa.me/2250711356324" id="whatsapp-float" target="_blank" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
 <button id="back-to-top" aria-label="Retour en haut"><i class="fa-solid fa-arrow-up"></i></button>
 <script src="js/supabase.js?v=1.0"></script>
-<script src="js/cms/registry.js?v=1.0"></script>
+<script src="js/cms/registry.js?v=1.1"></script>
 <script src="js/cms/renderer.js?v=1.0"></script>
-<script src="js/main.js?v=2.2"></script>
+<script src="js/main.js?v=2.3"></script>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
 </html>

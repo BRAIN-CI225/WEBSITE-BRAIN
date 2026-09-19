@@ -447,40 +447,59 @@ document.addEventListener('DOMContentLoaded', function () {
       });
 
       const successMsg = document.getElementById('form-success');
+      const errorMsg = document.getElementById('form-error');
       if(valid){
         const submitBtn = contactForm.querySelector('[type="submit"]');
         if(submitBtn){
           submitBtn.disabled = true;
           submitBtn.textContent = 'Envoi en cours…';
         }
-        const endpoint = (contactForm.getAttribute('action') || '').replace('formsubmit.co/', 'formsubmit.co/ajax/');
-        if(endpoint && 'fetch' in window){
-          fetch(endpoint, {
-            method:'POST',
-            headers:{'Accept':'application/json'},
-            body:new FormData(contactForm)
-          })
-          .then(function(response){ return response.json(); })
-          .then(function(data){
-            if(data && (data.success === 'true' || data.success === true)){
+        if(errorMsg){ errorMsg.textContent = ''; errorMsg.classList.remove('show'); }
+        const data = {
+          nom: contactForm.nom ? contactForm.nom.value : '',
+          entreprise: contactForm.entreprise ? contactForm.entreprise.value : '',
+          email: contactForm.email ? contactForm.email.value : '',
+          telephone: contactForm.telephone ? contactForm.telephone.value : '',
+          service: contactForm.service ? contactForm.service.value : '',
+          budget: contactForm.budget ? contactForm.budget.value : '',
+          message: contactForm.message ? contactForm.message.value : '',
+          _honey: contactForm._honey ? contactForm._honey.value : ''
+        };
+        const endpoint = '/.netlify/functions/send-mail';
+        const request = data._honey
+          ? Promise.resolve({ status: 200, body: { ok: true } })
+          : fetch(endpoint, {
+              method:'POST',
+              headers:{'Content-Type':'application/json','Accept':'application/json'},
+              body: JSON.stringify(data)
+            }).then(function(res){ return res.json().then(function(body){ return { status: res.status, body: body }; }); });
+        request
+          .then(function(res){
+            if(res.status >= 200 && res.status < 300 && res.body && res.body.ok){
               contactForm.reset();
               if(successMsg){
                 successMsg.classList.add('show');
                 successMsg.scrollIntoView({behavior:'smooth', block:'center'});
                 setTimeout(function(){ successMsg.classList.remove('show'); }, 6000);
               }
+            } else {
+              throw new Error((res.body && res.body.error) || 'Une erreur est survenue, veuillez réessayer.');
             }
           })
-          .catch(function(){})
+          .catch(function(err){
+            if(errorMsg){
+              errorMsg.textContent = (err && err.message)
+                ? err.message
+                : 'Une erreur est survenue, veuillez réessayer.';
+              errorMsg.classList.add('show');
+            }
+          })
           .finally(function(){
             if(submitBtn){
               submitBtn.disabled = false;
               submitBtn.textContent = 'Envoyer ma demande';
             }
           });
-        }else{
-          contactForm.submit();
-        }
       }
     });
 

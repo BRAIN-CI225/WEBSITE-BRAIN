@@ -593,7 +593,7 @@ jsonb_build_object('src','ASSET/clients/sodishop.png','alt','Sodishop')
  null,
  null,
  'orange-blue-orbs',
- jsonb_build_object('tag','Contact','phone','+2250711356324','phone_display','07 11 35 63 24','whatsapp','2250711356324','email','braincobusiness@gmail.com','website','www.braincobusiness.com','form_action','https://formsubmit.co/braincobusiness@gmail.com'),
+ jsonb_build_object('tag','Contact','phone','+2250711356324','phone_display','07 11 35 63 24','whatsapp','2250711356324','email','braincobusiness@gmail.com','website','www.braincobusiness.com','form_action','/.netlify/functions/send-mail'),
  'visible', 12, 'published')
 
 on conflict do nothing;

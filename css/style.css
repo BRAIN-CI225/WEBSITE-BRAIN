@@ -1618,6 +1618,18 @@ footer::before{
   align-items:center;gap:10px;
 }
 .form-success.show{display:flex;}
+.form-error{
+  display:none;
+  background:rgba(255,77,77,.12);
+  border:1px solid rgba(255,77,77,.4);
+  color:#ff8a8a;
+  padding:16px 20px;
+  border-radius:var(--radius-sm);
+  margin-bottom:20px;
+  font-size:.9rem;
+  align-items:flex-start;gap:10px;
+}
+.form-error.show{display:flex;}
 select option{background:#0b1330;color:var(--brain-white);}
 
 .contact-info-card{

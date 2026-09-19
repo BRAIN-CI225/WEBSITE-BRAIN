@@ -492,7 +492,7 @@
       { name: 'whatsapp', label: 'WhatsApp (numéro)', type: 'text', default: '2250711356324' },
       { name: 'email', label: 'Email', type: 'text', default: 'braincobusiness@gmail.com' },
       { name: 'website', label: 'Site web (affiché)', type: 'text', default: 'www.braincobusiness.com' },
-      { name: 'form_action', label: 'URL du formulaire (FormSubmit)', type: 'text', default: 'https://formsubmit.co/braincobusiness@gmail.com' }
+      { name: 'form_action', label: 'URL du formulaire (zone d\'envoi)', type: 'text', default: '/.netlify/functions/send-mail' }
     ]),
     validate: function (cfg) {
       return (!cfg.email || cfg.email.indexOf('@') === -1) ? ['Email invalide.'] : [];
