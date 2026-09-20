@@ -152,7 +152,7 @@
   function route() {
     var r = parseRoute();
     var main = $('#ad-main');
-    var needsAuth = ['pages', 'media', 'settings', 'logs', 'products', 'blog'];
+    var needsAuth = ['pages', 'media', 'settings', 'logs', 'products', 'blog', 'videos'];
     if (r.name === 'login' || (needsAuth.indexOf(r.name) === -1)) {
       if (!user) { renderLogin(); syncTopbar(); return; }
     }
@@ -164,6 +164,7 @@
     if (r.name === 'logs') return renderLogs();
     if (r.name === 'products') return renderProducts();
     if (r.name === 'blog') return renderBlogPosts();
+    if (r.name === 'videos') return renderAudiovisual();
     renderPages();
   }
   function syncTopbar() {
@@ -1592,6 +1593,45 @@
       }
     });
   }
+
+  /* =========================================================
+     AUDIOVISUEL — délégation au module admin-audiovisual.js
+     ========================================================= */
+  function renderAudiovisual() {
+    setActiveNav('videos');
+    var main = $('#ad-main');
+    main.innerHTML = '';
+    if (window.BRAIN_ADMIN_AV && typeof window.BRAIN_ADMIN_AV.render === 'function') {
+      return window.BRAIN_ADMIN_AV.render(main);
+    }
+    main.appendChild(el('div', { class: 'ad-card' }, [
+      el('div', { class: 'ad-empty', html: '<i class="fa-solid fa-video"></i><div>Module Audiovisuel non chargé.<br>Vérifiez que <code>admin/js/admin-audiovisual.js</code> est bien inclus.</div>' })
+    ]));
+  }
+
+  /* API publique partagée avec les modules d'extension (ex : audiovisuel) */
+  window.BRAIN_ADMIN_API = {
+    getClient: function () { return client; },
+    getUser: function () { return user; },
+    esc: esc,
+    escAttr: escAttr,
+    $: $,
+    $$: $$,
+    el: el,
+    toast: toast,
+    fmtDate: fmtDate,
+    slugify: slugify,
+    loading: loading,
+    logActivity: logActivity,
+    statusBadge: statusBadge,
+    closeDialog: closeDialog,
+    pushDialog: pushDialog,
+    openMediaModal: openMediaModal,
+    openCrudModal: openCrudModal,
+    crudField: crudField,
+    collectCrud: collectCrud,
+    setActiveNav: setActiveNav
+  };
 
   /* =========================================================
      INIT
