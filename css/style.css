@@ -1337,9 +1337,10 @@ footer::after{
   box-shadow:0 10px 24px var(--brain-orange-glow);
 }
 .footer-col h4{
-  font-size:.82rem;
+  font-size:.84rem;
+  font-weight:700;
   text-transform:uppercase;
-  letter-spacing:.12em;
+  letter-spacing:.13em;
   margin-bottom:24px;
   color:var(--brain-white);
   position:relative;
@@ -1369,24 +1370,6 @@ footer::after{
   position:relative;
 }
 .footer-links{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
-.footer-cta-sm{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:8px 18px;border-radius:100px;
-  font-family:var(--ff-head);font-weight:700;font-size:.72rem;
-  letter-spacing:.06em;text-transform:uppercase;
-  background:linear-gradient(120deg, rgba(246,139,31,.16), rgba(246,139,31,.04));
-  border:1.5px solid rgba(246,139,31,.5);
-  color:var(--brain-orange-light);
-  transition:all .3s ease;
-}
-.footer-cta-sm:hover{
-  background:linear-gradient(120deg, var(--brain-orange), #ff8f3c);
-  border-color:transparent;color:#fff;
-  box-shadow:0 0 22px rgba(246,139,31,.45);
-  transform:translateY(-2px);
-}
-
-/* ============ BOUTON ESPACE ADMIN (footer) ============ */
 .footer-admin-btn{
   display:inline-flex;
   align-items:center;
