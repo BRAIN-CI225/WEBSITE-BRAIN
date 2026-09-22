@@ -1,6 +1,6 @@
 /* ============================================================
    BRAIN — Notifications Web Push (frontend)
-   - Affiche une cloche 🔔 d'invitation après un délai.
+   - Affiche une petite carte d'invitation après un délai.
    - Gère consentement RGPD → inscription VAPID → endpoint
      serveur (push-subscribe) + désinscription.
    - Recharge les préférences depuis localStorage.
@@ -168,27 +168,6 @@
     return true;
   }
 
-  /* ---------- UI : vignette cloche ---------- */
-  function createBell() {
-    const existing = document.getElementById('brain-push-bell');
-    if (existing) return existing;
-
-    const bell = document.createElement('button');
-    bell.id = 'brain-push-bell';
-    bell.type = 'button';
-    bell.setAttribute('aria-label', 'Notifications BRAIN');
-    bell.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.7 21a2 2 0 0 1-3.4 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="brain-push-bell-badge">1</span>';
-    bell.classList.add('brain-push-bell');
-    if (allowPush() && isSubscribed()) bell.classList.add('is-enabled');
-
-    bell.addEventListener('click', function (ev) {
-      ev.stopPropagation();
-      togglePrefs();
-    });
-    document.body.appendChild(bell);
-    return bell;
-  }
-
   /* ---------- UI : la petite carte d'invitation ---------- */
   function showDialog(done) {
     const box = document.createElement('div');
@@ -237,61 +216,11 @@
     });
   }
 
-  /* ---------- UI : panneau de préférences ---------- */
-  function togglePrefs() {
-    const existing = document.getElementById('brain-push-prefs');
-    if (existing) { existing.remove(); return; }
-
-    const prefs = document.createElement('div');
-    prefs.id = 'brain-push-prefs';
-    prefs.className = 'brain-push-prefs';
-    const on = allowPush() && isSubscribed();
-    const analOn = consent.isAllowed ? consent.isAllowed('analytics') : false;
-    prefs.innerHTML =
-      '<div class="brain-push-prefs-card">' +
-      '  <strong>Préférences</strong>' +
-      '  <div class="brain-push-prefs-row">' +
-      '    <label class="brain-push-switch"><input type="checkbox" id="brain-push-toggle" ' + (on ? 'checked' : '') + '><span class="brain-push-track"></span></label>' +
-      '    <span>Notifications (🔔)</span>' +
-      '  </div>' +
-      '  <div class="brain-push-prefs-row">' +
-      '    <label class="brain-push-switch"><input type="checkbox" id="brain-analytics-toggle" ' + (analOn ? 'checked' : '') + '><span class="brain-push-track"></span></label>' +
-      '    <span>Statistiques de visite</span>' +
-      '  </div>' +
-      '  <small class="brain-push-prefs-note">Aucune donnée personnelle, aucune IP.<br><a href="/confidentialite.html">Politique de confidentialité</a></small>' +
-      '</div>';
-    document.body.appendChild(prefs);
-    document.addEventListener('click', function (e) {
-      const p = document.getElementById('brain-push-prefs');
-      if (p && !p.contains(e.target) && !bell.contains(e.target)) p.remove();
-    }, { once: true });
-
-    const toggle = prefs.querySelector('#brain-push-toggle');
-    toggle.addEventListener('change', async function () {
-      if (toggle.checked) {
-        const r = await subscribe();
-        if (!r.ok) { toggle.checked = false; }
-      } else {
-        await unsubscribe();
-        toggle.checked = false;
-      }
-    });
-
-    const analToggle = prefs.querySelector('#brain-analytics-toggle');
-    analToggle.addEventListener('change', function () {
-      if (consent.setAnalytics) consent.setAnalytics(analToggle.checked);
-    });
-  }
-
   /* ---------- Init ---------- */
   function init() {
     if (!supported) return;
-    createBell();
     window.setTimeout(function () {
-      if (shouldShowPrompt()) showDialog(function () {
-        const b = document.getElementById('brain-push-bell');
-        if (b && allowPush() && isSubscribed()) b.classList.add('is-enabled');
-      });
+      if (shouldShowPrompt()) showDialog();
     }, DELAY_MS);
   }
 
@@ -317,8 +246,7 @@
   window.BRAIN_NOTIFICATIONS = {
     supported: supported,
     subscribe: subscribe,
-    unsubscribe: unsubscribe,
-    togglePrefs: togglePrefs
+    unsubscribe: unsubscribe
   };
 
   if (typeof document !== 'undefined') {

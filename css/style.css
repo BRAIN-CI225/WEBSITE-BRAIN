@@ -2370,24 +2370,6 @@ select option{background:#0b1330;color:var(--brain-white);}
 /* ============================================================
    BRAIN — Notifications Web Push + Consentement (UI)
    ============================================================ */
-.brain-push-bell{
-  position:fixed;right:22px;bottom:22px;z-index:9990;
-  width:50px;height:50px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  background:var(--grad-orange);color:#1a1200;border:none;cursor:pointer;
-  box-shadow:0 12px 30px var(--brain-orange-glow);
-  transition:transform .25s ease, box-shadow .25s ease;
-}
-.brain-push-bell:hover{transform:translateY(-3px) scale(1.05);}
-.brain-push-bell.is-enabled{background:var(--grad-blue);color:#fff;box-shadow:0 12px 30px var(--brain-blue-glow);}
-.brain-push-bell-badge{
-  position:absolute;top:-2px;right:-2px;min-width:18px;height:18px;border-radius:999px;
-  background:var(--brain-orange);color:#fff;font-size:.62rem;font-weight:700;
-  display:flex;align-items:center;justify-content:center;padding:0 4px;
-  border:2px solid var(--brain-bg);
-}
-.brain-push-bell.is-enabled .brain-push-bell-badge{display:none;}
-
 .brain-push-dialog{
   position:fixed;left:0;right:0;bottom:0;top:0;
   z-index:9995;display:flex;align-items:flex-end;justify-content:flex-start;
@@ -2424,39 +2406,11 @@ select option{background:#0b1330;color:var(--brain-white);}
 }
 .brain-push-secondary:hover{border-color:var(--brain-white);color:var(--brain-white);}
 
-.brain-push-prefs{
-  position:fixed;right:22px;bottom:84px;z-index:9992;width:270px;
-}
-.brain-push-prefs-card{
-  background:var(--brain-surface);border:1px solid var(--brain-border);
-  border-radius:var(--radius-md);padding:16px;box-shadow:0 20px 60px rgba(0,0,0,.5);
-}
-.brain-push-prefs-card strong{color:var(--brain-white);font-weight:600;font-size:.9rem;display:block;margin-bottom:10px;}
-.brain-push-prefs-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;color:var(--brain-muted);font-size:.82rem;}
-.brain-push-switch{position:relative;display:inline-flex;align-items:center;cursor:pointer;}
-.brain-push-switch input{opacity:0;width:0;height:0;position:absolute;}
-.brain-push-track{
-  width:38px;height:21px;border-radius:999px;background:var(--brain-navy-2);
-  position:relative;transition:background .25s ease;flex-shrink:0;
-}
-.brain-push-track::after{
-  content:'';position:absolute;top:3px;left:3px;width:15px;height:15px;border-radius:50%;
-  background:var(--brain-white);transition:transform .25s ease;
-}
-.brain-push-switch input:checked + .brain-push-track{background:var(--grad-orange);}
-.brain-push-switch input:checked + .brain-push-track::after{transform:translateX(17px);}
-.brain-push-prefs-note{
-  display:block;color:var(--brain-gray);font-size:.72rem;line-height:1.5;margin-top:10px;
-}
-.brain-push-prefs-note a{color:var(--brain-orange-light);}
-
 @media(min-width:641px){
   .brain-push-dialog{padding:26px;align-items:flex-end;}
 }
 @media(max-width:480px){
-  .brain-push-bell{width:46px;height:46px;right:16px;bottom:16px;}
   .brain-push-dialog{padding:14px;}
-  .brain-push-prefs{right:16px;bottom:72px;}
 }
 @media(max-width:640px){
   .products-grid{grid-template-columns:1fr;}
