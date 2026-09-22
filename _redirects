@@ -7,12 +7,13 @@ https://braincobusiness.com     https://www.braincobusiness.com/       301!
 
 # Canoniques propres : les .html sont redirigés vers l'URL nette
 # (flag ! requis : sans lui, Netlify sert le fichier statique existant à la source)
-/produits.html  /produits  301!
-/blog.html       /blog      301!
-/contact.html    /contact   301!
-/services.html   /services  301!
-/portfolio.html  /portfolio  301!
-/a-propos.html   /a-propos   301!
+/produits.html      /produits      301!
+/blog.html          /blog          301!
+/contact.html       /contact       301!
+/services.html      /services      301!
+/portfolio.html     /portfolio     301!
+/a-propos.html      /a-propos      301!
+/confidentialite.html  /confidentialite  301!
 
 # Anciens articles (fichiers statiques) -> articles du blog dynamique
 /articles/combien-coute-la-creation-d-un-site-web-en-cote-divoire.html  /blog/combien-coute-la-creation-d-un-site-web-en-cote-divoire  301!
@@ -30,7 +31,8 @@ https://braincobusiness.com     https://www.braincobusiness.com/       301!
 /blog          /blog.html      200
 /blog/         /blog.html      200
 /blog/*        /blog.html      200
-/contact       /contact.html   200
+/contact       /contact.html  200
 /services      /services.html  200
 /portfolio     /portfolio.html 200
 /a-propos      /a-propos.html  200
+/confidentialite  /confidentialite.html  200

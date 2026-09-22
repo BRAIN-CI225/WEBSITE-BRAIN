@@ -152,7 +152,7 @@
   function route() {
     var r = parseRoute();
     var main = $('#ad-main');
-    var needsAuth = ['pages', 'media', 'settings', 'logs', 'products', 'blog', 'videos'];
+    var needsAuth = ['pages', 'media', 'settings', 'logs', 'products', 'blog', 'videos', 'analytics', 'notifications'];
     if (r.name === 'login' || (needsAuth.indexOf(r.name) === -1)) {
       if (!user) { renderLogin(); syncTopbar(); return; }
     }
@@ -165,6 +165,8 @@
     if (r.name === 'products') return renderProducts();
     if (r.name === 'blog') return renderBlogPosts();
     if (r.name === 'videos') return renderAudiovisual();
+    if (r.name === 'analytics') return renderAnalytics();
+    if (r.name === 'notifications') return renderNotifications();
     renderPages();
   }
   function syncTopbar() {
@@ -1116,9 +1118,9 @@
       pushDialog(scrim);
 
       var doc = '<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><base href="../">' +
-        '<link rel="stylesheet" href="css/style.css">' +
+        '<link rel="stylesheet" href="css/style.css?v=3.3">' +
         '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">' +
-        '<style>body{background:#020611;color:#edf2fb;font-family:Inter,sans-serif}img{max-width:100%}</style>' +
+        '<style>body{background:#020611;color:#edf2fb;font-family:Poppins,sans-serif}img{max-width:100%}</style>' +
         '</head><body>' + html + '</body></html>';
       $('.ad-preview-frame', scrim).srcdoc = doc;
 
@@ -1322,6 +1324,7 @@
       el('button', { class: 'ad-btn ad-sm ad-ghost', title: 'Monter', html: '<i class="fa-solid fa-arrow-up"></i>', disabled: i === 0, onclick: function () { moveProd(p, list[i - 1], box); } }),
       el('button', { class: 'ad-btn ad-sm ad-ghost', title: 'Descendre', html: '<i class="fa-solid fa-arrow-down"></i>', disabled: i === list.length - 1, onclick: function () { moveProd(p, list[i + 1], box); } }),
       el('button', { class: 'ad-btn ad-sm ad-ghost', title: 'Voir sur le site', html: '<i class="fa-solid fa-arrow-up-right-from-square"></i>', onclick: function () { window.open('../produits.html?p=' + encodeURIComponent(p.slug || ''), '_blank'); } }),
+      el('button', { class: 'ad-btn ad-sm ad-ghost', title: 'Notifier les abonnés (push)', html: '<i class="fa-solid fa-bell"></i>', onclick: function () { notifyFromAdmin(p, 'product'); } }),
       el('button', { class: 'ad-btn ad-sm ad-ghost', title: 'Modifier', html: '<i class="fa-solid fa-pen"></i>', onclick: function () { openProductEditor(p.id); } }),
       el('button', { class: 'ad-btn ad-sm ad-ghost', title: 'Dupliquer', html: '<i class="fa-solid fa-copy"></i>', onclick: function () { duplicateProduct(p); } }),
       el('button', { class: 'ad-btn ad-sm ' + (p.status === 'published' ? 'ad-warn' : 'ad-primary'), title: p.status === 'published' ? 'Dépublier' : 'Publier', html: p.status === 'published' ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>', onclick: function () { setProductStatus(p, p.status === 'published' ? 'draft' : 'published'); } }),
@@ -1513,6 +1516,7 @@
   function blogActions(p, box) {
     return el('div', { class: 'ad-row-actions' }, [
       el('button', { class: 'ad-btn ad-sm ad-ghost', title: 'Voir sur le site', html: '<i class="fa-solid fa-arrow-up-right-from-square"></i>', onclick: function () { window.open('../blog.html?p=' + encodeURIComponent(p.slug || ''), '_blank'); } }),
+      el('button', { class: 'ad-btn ad-sm ad-ghost', title: 'Notifier les abonnés (push)', html: '<i class="fa-solid fa-bell"></i>', onclick: function () { notifyFromAdmin(p, 'blog'); } }),
       el('button', { class: 'ad-btn ad-sm ad-ghost', title: 'Modifier', html: '<i class="fa-solid fa-pen"></i>', onclick: function () { openBlogEditor(p.id); } }),
       el('button', { class: 'ad-btn ad-sm ' + (p.status === 'published' ? 'ad-warn' : 'ad-primary'), title: p.status === 'published' ? 'Dépublier' : 'Publier', html: p.status === 'published' ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>', onclick: function () { setBlogStatus(p, p.status === 'published' ? 'draft' : 'published'); } }),
       el('button', { class: 'ad-btn ad-sm ad-ghost', title: p.status === 'archived' ? 'Restaurer (brouillon)' : 'Archiver', html: p.status === 'archived' ? '<i class="fa-solid fa-box-open"></i>' : '<i class="fa-solid fa-box-archive"></i>', onclick: function () { setBlogStatus(p, p.status === 'archived' ? 'draft' : 'archived'); } }),
@@ -1607,6 +1611,41 @@
     main.appendChild(el('div', { class: 'ad-card' }, [
       el('div', { class: 'ad-empty', html: '<i class="fa-solid fa-video"></i><div>Module Audiovisuel non chargé.<br>Vérifiez que <code>admin/js/admin-audiovisual.js</code> est bien inclus.</div>' })
     ]));
+  }
+
+  /* =========================================================
+     ANALYTICS & NOTIFICATIONS — délégation au module
+     admin-analytics.js
+     ========================================================= */
+  function renderAnalytics() {
+    setActiveNav('analytics');
+    var main = $('#ad-main');
+    main.innerHTML = '';
+    if (window.BRAIN_ADMIN_ANA && typeof window.BRAIN_ADMIN_ANA.renderAnalytics === 'function') {
+      return window.BRAIN_ADMIN_ANA.renderAnalytics(main);
+    }
+    main.appendChild(el('div', { class: 'ad-card' }, [
+      el('div', { class: 'ad-empty', html: '<i class="fa-solid fa-chart-line"></i><div>Module Analytics non chargé.<br>Vérifiez que <code>admin/js/admin-analytics.js</code> est bien inclus.</div>' })
+    ]));
+  }
+  function renderNotifications() {
+    setActiveNav('notifications');
+    var main = $('#ad-main');
+    main.innerHTML = '';
+    if (window.BRAIN_ADMIN_ANA && typeof window.BRAIN_ADMIN_ANA.renderNotifications === 'function') {
+      return window.BRAIN_ADMIN_ANA.renderNotifications(main);
+    }
+    main.appendChild(el('div', { class: 'ad-card' }, [
+      el('div', { class: 'ad-empty', html: '<i class="fa-solid fa-bell"></i><div>Module Notifications non chargé.<br>Vérifiez que <code>admin/js/admin-analytics.js</code> est bien inclus.</div>' })
+    ]));
+  }
+
+  /* ---------- Raccourci : notifier les abonnés (module analytics) ---------- */
+  function notifyFromAdmin(item, kind) {
+    if (window.BRAIN_ADMIN_ANA && typeof window.BRAIN_ADMIN_ANA.notifyAbout === 'function') {
+      return window.BRAIN_ADMIN_ANA.notifyAbout(item, kind);
+    }
+    toast('Module Notifications non chargé.', 'err');
   }
 
   /* API publique partagée avec les modules d'extension (ex : audiovisuel) */

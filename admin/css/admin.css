@@ -1,5 +1,5 @@
-/* =========================================================
-   BRAIN CMS — Admin styles
+﻿/* =========================================================
+   BRAIN CMS â€” Admin styles
    ========================================================= */
 :root{
   --ad-bg:#0a0f1f;
@@ -27,7 +27,7 @@ body.ad-app{
     radial-gradient(800px 520px at -10% 110%, rgba(79,124,255,.08), transparent 60%),
     var(--ad-bg);
   color:var(--ad-text);
-  font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-family:'Poppins',system-ui,-apple-system,'Segoe UI',sans-serif;
   font-size:15px;
   line-height:1.5;
   min-height:100vh;
@@ -100,7 +100,7 @@ input,select,textarea{font-family:inherit}
 .ad-btn.ad-icon{padding:7px 9px}
 .ad-btn:disabled{opacity:.5;cursor:not-allowed}
 
-/* ---------- Pages génériques ---------- */
+/* ---------- Pages gÃ©nÃ©riques ---------- */
 .ad-page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
 .ad-page-title{font-family:'Poppins',sans-serif;font-size:24px;font-weight:700;margin:0}
 .ad-page-sub{color:var(--ad-soft);margin:6px 0 0;font-size:14px}
@@ -178,7 +178,7 @@ input,select,textarea{font-family:inherit}
 .ad-check{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
 .ad-check input{width:18px;height:18px;accent-color:var(--ad-orange)}
 
-/* Bouton de sélection d'image */
+/* Bouton de sÃ©lection d'image */
 .ad-img-field{display:flex;flex-direction:column;gap:8px}
 .ad-img-preview{
   width:100%;max-width:220px;height:110px;border-radius:10px;
@@ -234,7 +234,7 @@ input,select,textarea{font-family:inherit}
 @keyframes adFade{from{opacity:0}to{opacity:1}}
 @keyframes adPop{from{transform:translateY(14px) scale(.98);opacity:0}to{transform:none;opacity:1}}
 
-/* Tiroir éditeur : plein écran */
+/* Tiroir Ã©diteur : plein Ã©cran */
 .ad-drawer{
   position:fixed;inset:0;z-index:95;background:rgba(4,7,16,.6);backdrop-filter:blur(2px);
   display:flex;justify-content:flex-end;animation:adFade .2s ease;
@@ -292,7 +292,7 @@ input,select,textarea{font-family:inherit}
 .ad-section-tools{display:flex;gap:6px}
 @media(max-width:640px){.ad-section-tools{flex-wrap:wrap;justify-content:flex-end}}
 
-/* ---------- Médias ---------- */
+/* ---------- MÃ©dias ---------- */
 .ad-media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
 .ad-media-item{
   border:1px solid var(--ad-border);border-radius:12px;overflow:hidden;
@@ -303,7 +303,7 @@ input,select,textarea{font-family:inherit}
 .ad-media-name{font-size:11px;color:var(--ad-soft);padding:8px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ad-media-item.ad-selected{border-color:var(--ad-green);box-shadow:0 0 0 3px rgba(46,204,143,.2)}
 .ad-media-item.ad-selected::after{
-  content:'✓';position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;
+  content:'âœ“';position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;
   background:var(--ad-green);color:#052;display:grid;place-items:center;font-size:12px;font-weight:800;
 }
 .ad-upload-zone{
@@ -325,7 +325,7 @@ input,select,textarea{font-family:inherit}
 .ad-toast.ad-ok i{color:var(--ad-green)}
 .ad-toast.ad-err i{color:var(--ad-red)}
 
-/* ---------- Aperçu ---------- */
+/* ---------- AperÃ§u ---------- */
 .ad-preview-scrim{position:fixed;inset:0;z-index:96;background:rgba(4,7,16,.78);display:flex;flex-direction:column;padding:14px}
 .ad-preview-toolbar{display:flex;gap:10px;align-items:center;margin-bottom:12px}
 .ad-preview-frame{
@@ -423,3 +423,29 @@ input,select,textarea{font-family:inherit}
   background:linear-gradient(150deg,#16307a,#0d1b3f 60%,#2b1a45);
 }
 .av-tbl-thumb-fallback i{color:var(--ad-orange);font-size:18px}
+
+/* ---------- Analytics ---------- */
+.ana-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.ana-card{background:rgba(255,255,255,.02);border:1px solid var(--ad-border);border-radius:14px;padding:18px}
+.ana-card-title{font-size:13px;font-weight:700;letter-spacing:.4px;color:var(--ad-text);margin:0 0 14px}
+.ana-bars{display:flex;flex-direction:column;gap:9px}
+.ana-bar-row{display:flex;align-items:center;gap:10px}
+.ana-bar-label{flex:0 0 46%;font-size:12px;color:var(--ad-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ana-bar-track{flex:1;height:8px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden}
+.ana-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#16307a,#145bff);transition:width .4s ease}
+.ana-bar-val{flex:0 0 40px;text-align:right;font-size:12px;font-weight:700;color:var(--ad-text)}
+.ana-sub + .ana-sub{margin-top:16px}
+.ana-sub b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--ad-muted);margin:12px 0 8px}
+.ana-list{display:flex;flex-direction:column;gap:8px}
+.ana-list-row{display:flex;justify-content:space-between;font-size:12px;color:var(--ad-muted);padding-bottom:8px;border-bottom:1px dashed var(--ad-border)}
+.ana-list-row b{color:var(--ad-text)}
+.ana-today{display:flex;align-items:center;gap:12px;padding:18px 20px;border-radius:14px;background:linear-gradient(120deg,rgba(20,91,255,.12),rgba(255,171,77,.08));border:1px solid rgba(20,91,255,.25);margin-bottom:18px}
+.ana-today-sentence{font-size:15px;font-weight:700;color:var(--ad-text);line-height:1.5;letter-spacing:.2px}
+.ana-today-sentence i{color:#145bff;margin-right:8px}
+.ana-today-body{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.ana-today-col b.ana-today-h{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--ad-muted);margin-bottom:10px}
+.ana-today-pages{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+.ana-today-pages li{font-size:12px;color:var(--ad-muted);display:flex;justify-content:space-between;gap:10px}
+.ana-today-pages .ana-today-url{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ana-today-pages b{color:var(--ad-text);flex:0 0 auto}
+@media(max-width:820px){.ana-grid{grid-template-columns:1fr}.ana-today-body{grid-template-columns:1fr}}
