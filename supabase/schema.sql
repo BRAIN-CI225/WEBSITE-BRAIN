@@ -400,9 +400,9 @@ insert into public.services (title, slug, tagline, description, image, icon, url
 on conflict (slug) do nothing;
 
 insert into public.projects (title, category, image, description, url, display_order) values
-  ('Supports ilOfio', 'Branding', 'ASSET/REALISATIONS/ilofio-brochures.jpg', 'Conception de brochures et déclinaisons de marque.', 'portfolio.html', 1),
-  ('Campagne IBK', 'Branding · Design', 'ASSET/REALISATIONS/ibk-campagne-vehicule.jpg', 'Habillage publicitaire et déclinaison de campagne.', 'portfolio.html', 2),
-  ('Affichage Tiken Jah', 'Événementiel', 'ASSET/REALISATIONS/tiken-jah-affichage.jpg', 'Création de support grand format pour événement culturel.', 'portfolio.html', 3)
+  ('Pressbook BRAIN - Page 04', 'Pressbook', 'ASSET/REALISATIONS/web/pressbook-brain-2024-page-0004.webp', 'Extrait du pressbook officiel BRAIN.', 'portfolio.html', 1),
+  ('Pressbook BRAIN - Page 16', 'Pressbook', 'ASSET/REALISATIONS/web/pressbook-brain-2024-page-0016.webp', 'Extrait du pressbook officiel BRAIN.', 'portfolio.html', 2),
+  ('Pressbook BRAIN - Page 28', 'Pressbook', 'ASSET/REALISATIONS/web/pressbook-brain-2024-page-0028.webp', 'Extrait du pressbook officiel BRAIN.', 'portfolio.html', 3)
 on conflict do nothing;
 
 insert into public.testimonials (client_name, company, position, testimonial, rating, display_order) values

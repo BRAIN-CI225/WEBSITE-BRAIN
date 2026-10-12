@@ -57,7 +57,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-<link rel="stylesheet" href="css/style.css?v=3.4">
+<link rel="stylesheet" href="css/style.css?v=4.0">
 </head>
 <body data-page="portfolio">
 
@@ -106,82 +106,28 @@
   <div class="container">
     <div class="filter-bar" data-aos="fade-up">
       <button class="filter-btn active" data-filter="tout">Tout</button>
-      <button class="filter-btn" data-filter="branding">Branding</button>
-      <button class="filter-btn" data-filter="web">Web</button>
-      <button class="filter-btn" data-filter="social">Social Media</button>
-      <button class="filter-btn" data-filter="design">Design</button>
+      <button class="filter-btn" data-filter="pressbook">Pressbook</button>
       <button class="filter-btn" data-filter="audiovisuel">Audiovisuel</button>
-      <button class="filter-btn" data-filter="evenementiel">Événementiel</button>
-      <button class="filter-btn" data-filter="digital">Digital</button>
     </div>
 
-    <div class="portfolio-grid">
-      <div class="portfolio-item" data-cat="branding" data-aos="zoom-in">
-        <img src="ASSET/REALISATIONS/ilofio-brochures.jpg" alt="Supports de communication ilOfio">
-        <div class="pf-overlay"><span class="pf-cat">Branding · Design</span><h3>Supports ilOfio</h3><p>Conception de brochures et déclinaisons de marque.</p><a href="service-design.html" class="pf-btn">Voir le projet</a></div>
-      </div>
-      <div class="portfolio-item" data-cat="branding design" data-aos="zoom-in" data-aos-delay="80">
-        <img src="ASSET/REALISATIONS/dampo-campagne-produits.jpg" alt="Campagne produits Dampo">
-        <div class="pf-overlay"><span class="pf-cat">Design</span><h3>Campagne produits Dampo</h3><p>Création de visuels publicitaires et déclinaisons packshot.</p><a href="service-design.html" class="pf-btn">Voir le projet</a></div>
-      </div>
-      <div class="portfolio-item" data-cat="web digital" data-aos="zoom-in" data-aos-delay="160">
-        <img src="ASSET/REALISATIONS/formation-graphisme-brain.jpg" alt="Affiche de formation en graphisme BRAIN">
-        <div class="pf-overlay"><span class="pf-cat">Design · Branding</span><h3>Formation créative BRAIN</h3><p>Direction artistique et affiche de communication.</p><a href="service-branding.html" class="pf-btn">Voir le projet</a></div>
-      </div>
-      <div class="portfolio-item" data-cat="social" data-aos="zoom-in">
-        <img src="ASSET/REALISATIONS/brochure-institutionnelle.jpg" alt="Brochure institutionnelle conçue par BRAIN">
-        <div class="pf-overlay"><span class="pf-cat">Design</span><h3>Brochure institutionnelle</h3><p>Mise en page éditoriale et support de présentation.</p><a href="service-design.html" class="pf-btn">Voir le projet</a></div>
-      </div>
-      <div class="portfolio-item" data-cat="design" data-aos="zoom-in" data-aos-delay="80">
-        <img src="ASSET/REALISATIONS/ibk-campagne-vehicule.jpg" alt="Campagne de communication IBK sur véhicule">
-        <div class="pf-overlay"><span class="pf-cat">Branding · Design</span><h3>Campagne IBK</h3><p>Habillage publicitaire et déclinaison de campagne.</p><a href="service-branding.html" class="pf-btn">Voir le projet</a></div>
-      </div>
-      <div class="portfolio-item" data-cat="audiovisuel" data-aos="zoom-in" data-aos-delay="160">
-        <img src="ASSET/REALISATIONS/roc-energy-campagne.jpg" alt="Visuel publicitaire ROC Energy Drink">
-        <div class="pf-overlay"><span class="pf-cat">Design · Audiovisuel</span><h3>Campagne ROC Energy</h3><p>Création de visuels publicitaires pour affichage.</p><a href="service-films.html" class="pf-btn">Voir le projet</a></div>
-      </div>
-      <article class="portfolio-item video-project" data-cat="audiovisuel" data-aos="zoom-in" data-aos-delay="200">
-        <img src="ASSET/SERVICES/films.jpg" alt="Film audiovisuel BRAIN, vidéo YouTube" loading="lazy">
-        <span class="video-project-icon" aria-hidden="true"><i class="fa-solid fa-play"></i></span>
-        <div class="pf-overlay">
-          <span class="pf-cat">Audiovisuel · YouTube</span>
-          <h3>Production audiovisuelle</h3>
-          <p>Film de présentation à regarder en ligne.</p>
-          <button class="pf-btn video-trigger" type="button" data-video-url="https://www.youtube.com/watch?v=w0JiSuqoSQc" data-video-title="Production audiovisuelle BRAIN">Lire la vidéo <i class="fa-solid fa-play"></i></button>
+    <div data-gallery-block>
+      <div class="gallery-head">
+        <div>
+          <h2>Pressbook <span class="accent">BRAIN</span></h2>
+          <p>34 r&eacute;alisations &mdash; naviguez par vignettes, fl&egrave;ches ou balayage tactile.</p>
         </div>
-      </article>
-      <article class="portfolio-item video-project" data-cat="audiovisuel" data-aos="zoom-in" data-aos-delay="240">
-        <img src="ASSET/SERVICES/live.jpg" alt="Captation vidéo BRAIN, vidéo YouTube" loading="lazy">
-        <span class="video-project-icon" aria-hidden="true"><i class="fa-solid fa-play"></i></span>
-        <div class="pf-overlay">
-          <span class="pf-cat">Audiovisuel · YouTube</span>
-          <h3>Captation et live</h3>
-          <p>Référence vidéo disponible sur YouTube.</p>
-          <button class="pf-btn video-trigger" type="button" data-video-url="https://www.youtube.com/watch?v=AdJfB29UtbU" data-video-title="Captation et live BRAIN">Lire la vidéo <i class="fa-solid fa-play"></i></button>
-        </div>
-      </article>
-      <div class="portfolio-item" data-cat="evenementiel audiovisuel" data-aos="zoom-in">
-        <img src="ASSET/REALISATIONS/tiken-jah-affichage.jpg" alt="Affichage événementiel pour Tiken Jah Fakoly">
-        <div class="pf-overlay"><span class="pf-cat">Événementiel</span><h3>Affichage Tiken Jah</h3><p>Création de support grand format pour événement culturel.</p><a href="service-live.html" class="pf-btn">Voir le projet</a></div>
       </div>
-      <div class="portfolio-item" data-cat="digital web" data-aos="zoom-in" data-aos-delay="80">
-        <img src="ASSET/REALISATIONS/kit-accouchement-campagne.jpg" alt="Campagne de sensibilisation sur le kit d'accouchement">
-        <div class="pf-overlay"><span class="pf-cat">Design · Institutionnel</span><h3>Campagne santé publique</h3><p>Affiche de sensibilisation et communication institutionnelle.</p><a href="service-design.html" class="pf-btn">Voir le projet</a></div>
-      </div>
-      <div class="portfolio-item" data-cat="evenementiel" data-aos="zoom-in" data-aos-delay="160">
-        <img src="ASSET/REALISATIONS/telecel-campagne.jpg" alt="Campagne Telecel avec véhicules habillés">
-        <div class="pf-overlay"><span class="pf-cat">Branding · Événementiel</span><h3>Campagne Telecel</h3><p>Habillage de véhicules et communication de marque.</p><a href="service-branding.html" class="pf-btn">Voir le projet</a></div>
-      </div>
+      <div class="brain-gallery" data-brain-gallery aria-label="Galerie Pressbook BRAIN"></div>
     </div>
-    <div class="video-modal" id="video-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="video-modal-title">
-      <div class="video-modal-backdrop" data-video-close></div>
-      <div class="video-modal-panel">
-        <div class="video-modal-header">
-          <h2 id="video-modal-title">Lecture vidéo</h2>
-          <button class="video-modal-close" type="button" aria-label="Fermer le lecteur vidéo" data-video-close><i class="fa-solid fa-xmark"></i></button>
+
+<div data-video-block>
+      <div class="gallery-head" style="margin-top:60px;">
+        <div>
+          <h2>Audiovisuel</h2>
+          <p>Films, spots et captations &mdash; lecteur int&eacute;gr&eacute; avec playlist.</p>
         </div>
-        <div class="video-frame" id="video-frame"></div>
       </div>
+      <div class="vp-grid" data-video-player></div>
     </div>
   </div>
 </section>
@@ -270,6 +216,10 @@
 <script src="js/consent.js?v=1.0"></script>
 <script src="js/analytics.js?v=1.0"></script>
 <script src="js/notifications.js?v=1.1"></script>
+<script src="js/realisations-data.js?v=1.1"></script>
+<script src="js/portfolio-gallery.js?v=1.1"></script>
+<script src="js/wistia-videos.js?v=1.0"></script>
+<script src="js/video-player.js?v=1.1"></script>
 <script src="js/main.js?v=2.3"></script>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>

@@ -61,7 +61,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-<link rel="stylesheet" href="css/style.css?v=3.4">
+    <link rel="stylesheet" href="css/style.css?v=3.6">
 </head>
 <body>
 
@@ -117,8 +117,12 @@
     </div>
 
     <div class="service-block">
-      <div class="sb-media" data-aos="fade-right">
-        <img src="ASSET/SERVICES/branding.jpg" alt="Identité visuelle et branding BRAIN">
+      <div class="sb-media sb-media--poster" data-aos="fade-right">
+        <picture>
+          <source type="image/avif" srcset="ASSET/SERVICES/branding.avif">
+          <source type="image/webp" srcset="ASSET/SERVICES/branding.webp">
+          <img src="ASSET/SERVICES/branding.png" alt="Identité visuelle et branding BRAIN" width="1055" height="1491" loading="lazy" decoding="async">
+        </picture>
         <span class="sb-tag">Service 01</span>
       </div>
       <div class="sb-content" data-aos="fade-left">
@@ -190,6 +194,21 @@
       <a href="service-web.html" class="sdn-item">Création de sites web &amp; e-commerce</a>
       <a href="service-films.html" class="sdn-item">Films publicitaires</a>
     </div>
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="container">
+    <nav class="service-pager" aria-label="Navigation entre les services">
+      <a class="sp-prev" href="service-digital.html">
+        <span class="sp-arrow"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></span>
+        <span class="sp-text"><small>Service précédent</small><strong>Digitalisation des Entreprises</strong></span>
+      </a>
+      <a class="sp-next" href="service-web.html">
+        <span class="sp-text"><small>Service suivant</small><strong>Sites Web &amp; E-commerce</strong></span>
+        <span class="sp-arrow"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+      </a>
+    </nav>
   </div>
 </section>
 

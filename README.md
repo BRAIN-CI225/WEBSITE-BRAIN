@@ -111,7 +111,9 @@ sitemap.xml
 css/
   └── style.css        (design system complet : couleurs, composants, responsive)
 js/
-  └── main.js           (navigation, animations, filtres portfolio, validation formulaire)
+  ├── main.js               (navigation, animations, filtres portfolio, validation formulaire)
+  ├── realisations-data.js  (catalogue REALISATIONS auto-généré — tools/build-portfolio.py)
+  └── portfolio-gallery.js  (slider/visionneuse du portfolio)
 ASSET/
   ├── brain-branding-poster.png   (affiche officielle BRAIN fournie par le client)
   ├── NOS CLIENTS.png              (planche source des logos clients)
@@ -124,16 +126,10 @@ ASSET/
   │   ├── films.jpg                (version web optimisée, source films.png)
   │   ├── live.jpg                 (version web optimisée, source live.png)
   │   └── digitalisation.jpg       (version web optimisée, source digitalisation.png)
-  ├── REALISATIONS/                (photos extraites et nommées depuis le pressbook)
-  │   ├── ilofio-brochures.jpg
-  │   ├── dampo-campagne-produits.jpg
-  │   ├── formation-graphisme-brain.jpg
-  │   ├── brochure-institutionnelle.jpg
-  │   ├── ibk-campagne-vehicule.jpg
-  │   ├── roc-energy-campagne.jpg
-  │   ├── tiken-jah-affichage.jpg
-  │   ├── kit-accouchement-campagne.jpg
-  │   └── telecel-campagne.jpg
+  ├── REALISATIONS/                (Pressbook BRAIN : pages source)
+  │   ├── PRESSBOOK BRAIN_2024_page-XXXX.jpg  (34 pages, 3557x2000, originaux conservés)
+  │   └── web/                     (versions web générées + miniatures : .webp/.avif + *-thumb.*)
+  │       └── pressbook-brain-2024-page-XXXX.webp|.avif  (catalogue du slider portfolio)
   ├── service-web.jpg
   ├── service-social.jpg
   ├── service-films.jpg
